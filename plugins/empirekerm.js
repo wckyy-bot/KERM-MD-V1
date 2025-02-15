@@ -10,7 +10,7 @@ cmd({
     const familyList = `
          *[ • 𝖪𝖤𝖱𝖬 𝖥𝖠𝖬𝖨𝖫𝖸 • ]*
 
-    [ • 𝖣𝖠𝖬𝖤 𝖪𝖤𝖱𝖬: 𝖢𝖠𝖱𝖬𝖤𝖭👸 ]
+    *[ • DAME KERM: CARMEN👸 ]*
        *•────────────•⟢*
                 *𝖥𝖱𝖨𝖤𝖭𝖣’𝖲*
       *╭┈───────────────•*
@@ -20,11 +20,14 @@ cmd({
       *│  ◦* *▢➠ HENRY*
       *│  ◦* *▢➠ LEA*
       *│  ◦* *▢➠ MARILYN*
+      *│  ◦* *▢➠ CASSANDRA*
       *│  ◦* *▢➠ EMIE*
       *│  ◦* *▢➠ SPIDIT*
       *│  ◦* *▢➠ RAPHAËL*
       *│  ◦* *▢➠ BRAYANO*
       *│  ◦* *▢➠ AMIR*
+      *│  ◦* *▢➠ MIDAS*
+      *│  ◦* *▢➠ CHRIST*
       *│  ◦* *▢➠ NOBLESSE*
       *│  ◦* *▢➠ NATH*
       *│  ◦* *▢➠ FANNY*
