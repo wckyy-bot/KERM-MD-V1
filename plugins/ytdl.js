@@ -157,7 +157,7 @@ cmd({
             'key': _0x25ddf5.key
           }
         });
-        const _0x1cc9d0 = await fetchJson('https://api.giftedtech.my.id/api/download/y2mate?apikey=gifted&url=' + _0x5ed25e);
+        const _0x1cc9d0 = await fetchJson('https://api.ryzendesu.vip/api/downloader/ytmp3?url=' + _0x5ed25e);
         const _0x5741ec = _0x1cc9d0.result.download_url;
         await _0x5351f6.sendMessage(_0x3277a3, {
           'delete': _0x166c67.key
