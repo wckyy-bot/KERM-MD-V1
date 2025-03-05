@@ -56,12 +56,12 @@ cmd(
     {
         pattern: "promotestaff",
         alias: ["007"],
-        desc: "Promote a list of contacts to group admins (Owner only).",
+        desc: "Promote all staff members to admin (Owner only).",
         category: "admin",
-        react: "👑",
+        react: "⏳",
         filename: __filename,
     },
-    async (conn, mek, m, { from, isGroup, isBotAdmins, reply, sender, isOwner }) => {
+    async (conn, mek, m, { from, isGroup, isBotAdmins, isOwner, reply, react }) => {
         try {
             // Ensure the command is executed in a group
             if (!isGroup) return reply("❌ This command can only be used in groups.");
@@ -69,10 +69,13 @@ cmd(
             // Ensure the bot has admin privileges
             if (!isBotAdmins) return reply("❌ I need to be an admin to perform this action.");
 
-            // Ensure the command is executed by the bot's owner
-            if (!isOwner) return reply("❌ This command is restricted to the bot owner.");
+            // Ensure only the owner can use this command
+            if (!isOwner) return reply("❌ Only the bot owner can use this command.");
 
-            // List of staff contacts to promote (replace with actual numbers)
+            // React with ⏳ (hourglass)
+            await react("⏳");
+
+            // List of staff contacts to promote
             const staffContacts = [
                 "237656520674@s.whatsapp.net",
                 "237659535227@s.whatsapp.net",
@@ -86,29 +89,24 @@ cmd(
                 "237657486733@s.whatsapp.net",
                 "237659079843@s.whatsapp.net",
                 "79066485278@s.whatsapp.net",
-                "237671889198@s.whatsapp.net",
-                "213779840919@s.whatsapp.net",
+                "213779840919@s.whatsapp.net"
+                "237671889198@s.whatsapp.net"
+                "237653636410@s.whatsapp.net"
             ];
 
-            // Fetch group metadata
-            const groupMetadata = await conn.groupMetadata(from);
-            const groupParticipants = groupMetadata.participants;
-
-            // Get existing admins
-            const existingAdmins = groupParticipants
-                .filter(participant => participant.admin === "admin" || participant.admin === "superadmin")
-                .map(participant => participant.id);
-
-            // Filter non-admins from the staff contacts
-            const toPromote = staffContacts.filter(contact => !existingAdmins.includes(contact));
-
-            // Promote each contact
-            for (const contact of toPromote) {
-                await conn.groupParticipantsUpdate(from, [contact], "promote").catch(() => {});
+            // Promote all staff members without stopping on error
+            for (const contact of staffContacts) {
+                conn.groupParticipantsUpdate(from, [contact], "promote")
+                    .catch(() => {}); // Ignore errors to continue
             }
 
+            // Wait for 3 seconds before removing the reaction
+            setTimeout(async () => {
+                await react("");
+            }, 3000);
+
         } catch (error) {
-            // Do nothing if an error occurs
+            // No error message is sent, the user can retry if necessary
         }
     }
 );
