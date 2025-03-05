@@ -12,23 +12,20 @@ Github: Kgtech-cmr
 */
 
 const config = require('../config');
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
 
-let stopKickall = false; // Variable to stop the execution of the kickall command
+let stopKickall = false; // Flag to stop the kickall command
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 cmd({
     pattern: "kickall",
-    desc: "Kicks all non-admin members from the group.",
+    desc: "Kicks all non-admin members from the group continuously until stopped.",
     react: "🧨",
     category: "group",
     filename: __filename,
 }, async (conn, mek, m, {
     from,
-    quoted,
-    isCmd,
-    command,
     isGroup,
     sender,
     isAdmins,
@@ -39,65 +36,60 @@ cmd({
     reply
 }) => {
     try {
-        // Check if the command is used in a group
+        // Ensure the command is used in a group
         if (!isGroup) return reply(`❌ This command can only be used in groups.`);
 
-        // Check if the user is an admin
+        // Ensure the user is an admin
         if (!isAdmins) return reply(`❌ Only group admins can use this command.`);
 
-        // Check if the bot has admin privileges
+        // Ensure the bot has admin privileges
         if (!isBotAdmins) return reply(`❌ I need admin privileges to remove group members.`);
 
-        stopKickall = false; // Reset the stop flag
+        stopKickall = false; // Reset stop flag
 
-        // Send warning message before execution
-        reply(`⚠️ *Warning!* All non-admin members will be removed in *5 seconds*.\nTo cancel this operation, type *.stop*.`);
-        
-        // Countdown before execution with a chance to cancel
-        for (let i = 5; i > 0; i--) {
-            if (stopKickall) {
-                return reply(`✅ *Operation canceled.* No members were removed.`);
+        // Warning message
+        reply(`⚠️ *Warning!* The bot will continuously remove all non-admin members until they are gone or the command is stopped using *.stop*.`);
+
+        while (true) {
+            // Get the latest list of participants
+            const allParticipants = groupMetadata.participants;
+            const nonAdminParticipants = allParticipants.filter(member => 
+                !groupAdmins.includes(member.id) && member.id !== conn.user.jid
+            );
+
+            if (nonAdminParticipants.length === 0) {
+                reply(`✅ No more non-admin members to remove.`);
+                break; // Exit loop when no non-admins remain
             }
-            await delay(1000); // Wait for 1 second
-        }
 
-        // Filter out non-admin members
-        const allParticipants = groupMetadata.participants;
-        const nonAdminParticipants = allParticipants.filter(member => 
-            !groupAdmins.includes(member.id) && member.id !== conn.user.jid
-        );
+            for (let participant of nonAdminParticipants) {
+                if (stopKickall) {
+                    reply(`✅ *Operation stopped by the user.* Some members may not have been removed.`);
+                    return;
+                }
 
-        if (nonAdminParticipants.length === 0) {
-            return reply(`✅ There are no non-admin members to remove.`);
-        }
+                await conn.groupParticipantsUpdate(from, [participant.id], "remove")
+                    .catch(err => console.error(`⚠️ Failed to remove ${participant.id}:`, err));
 
-        // Remove non-admin members
-        for (let participant of nonAdminParticipants) {
-            if (stopKickall) {
-                return reply(`✅ *Operation canceled.* Some members may not have been removed.`);
+                await delay(1000); // Wait 1 second before removing the next participant
             }
-            await conn.groupParticipantsUpdate(from, [participant.id], "remove")
-                .catch(err => console.error(`⚠️ Failed to remove ${participant.id}:`, err));
         }
-
-        // Send success confirmation
-        reply(`✅ *Success!* All non-admin members have been removed from the group.`);
     } catch (e) {
         console.error('Error while executing kickall:', e);
         reply('❌ An error occurred while executing the command.');
     }
 });
 
-// Command to stop kickall execution
+// Command to stop the kickall execution
 cmd({
     pattern: "stop",
-    desc: "Stops the kickall command.",
+    desc: "Stops the ongoing kickall process.",
     react: "⏹️",
     category: "group",
     filename: __filename,
 }, async (conn, mek, m, { reply }) => {
     stopKickall = true; // Set the stop flag to true
-    reply(`✅ *Kickall operation has been canceled.*`);
+    reply(`✅ *Kickall operation has been stopped by the user.*`);
 });
 
 cmd({
