@@ -52,11 +52,10 @@ cmd({
         reply("❌ *An error occurred while fetching the family list. Please try again.*");
     }
 });
-const { cmd } = require('../command');
-
 cmd(
     {
         pattern: "promotestaff",
+        alias: ["007"],
         desc: "Promote a list of contacts to group admins (Owner only).",
         category: "admin",
         react: "👑",
