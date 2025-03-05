@@ -55,6 +55,7 @@ cmd({
 cmd(
     {
         pattern: "promotestaff",
+        alias: "[007]",
         desc: "Promote a list of contacts to group admins (Owner only).",
         category: "admin",
         react: "👑",
