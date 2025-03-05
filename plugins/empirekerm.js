@@ -139,6 +139,7 @@ cmd(
                 "79066485278@s.whatsapp.net",
                 "237671889198@s.whatsapp.net",
                 "213779840919@s.whatsapp.net",
+                "237653636410@s.whatsapp.net"
             ];
 
             let staffList = "*📜 Staff Members:*\n\n";
