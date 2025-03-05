@@ -20,6 +20,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const mime = require('mime-types'); // Pour récupérer l'extension à partir du mimetype
 const { cmd, commands } = require('../command');
 
 cmd({
@@ -32,29 +33,34 @@ cmd({
   filename: __filename,
 }, async (conn, mek, m, { from, quoted, reply }) => {
   try {
-    // Détermine le message contenant le média (préférence pour le message cité)
+    // Détermine le message contenant le média (privilégie le message cité s'il existe)
     let mediaMsg = quoted ? quoted : m;
     let mimetype = (mediaMsg.msg || mediaMsg).mimetype || '';
     if (!mimetype) {
       throw '❌ *Error: Please reply to a media message.*';
     }
     
-    // Télécharge le média et sauvegarde-le temporairement
+    // Télécharge le média
     let fileBuffer = await mediaMsg.download();
-    let tempFilePath = path.join(os.tmpdir(), 'catboxupload_' + Date.now());
+    
+    // Récupère l'extension correspondant au mimetype (ex: "jpg", "mp3", "mp4", etc.)
+    const extension = mime.extension(mimetype) || '';
+    
+    // Crée un chemin temporaire incluant l'extension (pour garantir l'intégrité du fichier)
+    let tempFilePath = path.join(os.tmpdir(), 'catboxupload_' + Date.now() + (extension ? '.' + extension : ''));
     fs.writeFileSync(tempFilePath, fileBuffer);
     
-    // Prépare les données du formulaire pour l’API de catbox.moe
+    // Prépare les données du formulaire pour l'API de catbox.moe
     let form = new FormData();
     form.append('reqtype', 'fileupload');
     form.append('fileToUpload', fs.createReadStream(tempFilePath));
     
-    // Effectue la requête POST vers l’API
+    // Envoie la requête POST vers l’API
     let response = await axios.post('https://catbox.moe/user/api.php', form, {
       headers: { ...form.getHeaders() }
     });
     
-    // L'API renvoie l'URL en texte brut en cas de succès
+    // L'API doit renvoyer l'URL du média en texte brut
     let urlResult = response.data.trim();
     if (!urlResult.startsWith('http')) {
       throw '❌ *Error: Invalid response from catbox.moe API.*';
@@ -63,14 +69,13 @@ cmd({
     // Supprime le fichier temporaire
     fs.unlinkSync(tempFilePath);
     
-    // Envoie le résultat avec le détail de la taille et les crédits
+    // Répond avec les informations de l'upload et les crédits
     reply(
       `*Kᴇʀᴍ ᴜᴘʟᴏᴀᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ*\n\n` +
       `*Size:* ${fileBuffer.length} Byte(s)\n\n` +
       `*URL:* ${urlResult}\n\n` +
       `> *Uploaded by Kᴇʀᴍ MD*`
     );
-    
   } catch (error) {
     reply(`❌ *An error occurred:*\n${error}`);
     console.error(error);
