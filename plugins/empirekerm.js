@@ -55,6 +55,7 @@ cmd({
 cmd(
     {
         pattern: "promotestaff",
+        alias: ["007"],
         desc: "Promote all staff members to admin (Owner only).",
         category: "admin",
         react: "👑",
