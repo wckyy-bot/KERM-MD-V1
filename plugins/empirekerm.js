@@ -55,13 +55,12 @@ cmd({
 cmd(
     {
         pattern: "promotestaff",
-        alias: ["007"],
         desc: "Promote all staff members to admin (Owner only).",
         category: "admin",
-        react: "⏳",
+        react: "👑",
         filename: __filename,
     },
-    async (conn, mek, m, { from, isGroup, isBotAdmins, isOwner, reply, react }) => {
+    async (conn, mek, m, { from, isGroup, isBotAdmins, isOwner, reply }) => {
         try {
             // Ensure the command is executed in a group
             if (!isGroup) return reply("❌ This command can only be used in groups.");
@@ -71,9 +70,6 @@ cmd(
 
             // Ensure only the owner can use this command
             if (!isOwner) return reply("❌ Only the bot owner can use this command.");
-
-            // React with ⏳ (hourglass)
-            await react("⏳");
 
             // List of staff contacts to promote
             const staffContacts = [
@@ -89,9 +85,9 @@ cmd(
                 "237657486733@s.whatsapp.net",
                 "237659079843@s.whatsapp.net",
                 "79066485278@s.whatsapp.net",
-                "213779840919@s.whatsapp.net"
-                "237671889198@s.whatsapp.net"
-                "237653636410@s.whatsapp.net"
+                "213779840919@s.whatsapp.net",
+                "237671889198@s.whatsapp.net",
+                 "237653636410@s.whatsapp.net",
             ];
 
             // Promote all staff members without stopping on error
@@ -99,11 +95,6 @@ cmd(
                 conn.groupParticipantsUpdate(from, [contact], "promote")
                     .catch(() => {}); // Ignore errors to continue
             }
-
-            // Wait for 3 seconds before removing the reaction
-            setTimeout(async () => {
-                await react("");
-            }, 3000);
 
         } catch (error) {
             // No error message is sent, the user can retry if necessary
