@@ -68,8 +68,7 @@ cmd({
       `*Kᴇʀᴍ ᴜᴘʟᴏᴀᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ*\n\n` +
       `*Size:* ${fileBuffer.length} Byte(s)\n\n` +
       `*URL:* ${urlResult}\n\n` +
-      `> *Uploaded by Kᴇʀᴍ MD*\n` +
-      `*Credits:* Contact +237656520674 | YT: KermHackTools | Github: Kgtech-cmr`
+      `> *Uploaded by Kᴇʀᴍ MD*`
     );
     
   } catch (error) {
