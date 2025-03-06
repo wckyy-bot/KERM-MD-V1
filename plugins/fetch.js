@@ -1,5 +1,6 @@
 const { cmd } = require("../command");
 const fetch = require("node-fetch");
+const cheerio = require('cheerio');
 
 // Fonction principale de fetch
 const fetchContent = async (url, client, m) => {
@@ -96,4 +97,82 @@ cmd({
 }, async (conn, mek, m, { from, q, reply }) => {
     if (!q) return reply("Provide a valid URL to fetch!");
     await fetchContent(q, conn, m);
+});
+
+const fetchAndParseWebsite = async (url, client, m, reply) => {
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
+        const mediaFiles = [];
+        $('img[src], video[src], audio[src]').each((i, element) => {
+            let src = $(element).attr('src');
+            if (src) {
+                mediaFiles.push(src);
+            }
+        });
+
+        const cssFiles = [];
+        $('link[rel="stylesheet"]').each((i, element) => {
+            let href = $(element).attr('href');
+            if (href) {
+                cssFiles.push(href);
+            }
+        });
+
+        const jsFiles = [];
+        $('script[src]').each((i, element) => {
+            let src = $(element).attr('src');
+            if (src) {
+                jsFiles.push(src);
+            }
+        });
+
+        await reply(`**Full HTML Content**:\n\n${html}`);
+
+        if (cssFiles.length > 0) {
+            for (const cssFile of cssFiles) {
+                const cssResponse = await fetch(new URL(cssFile, url));
+                const cssContent = await cssResponse.text();
+                await reply(`**CSS File Content**:\n\n${cssContent}`);
+            }
+        } else {
+            await reply("No external CSS files found.");
+        }
+
+        if (jsFiles.length > 0) {
+            for (const jsFile of jsFiles) {
+                const jsResponse = await fetch(new URL(jsFile, url));
+                const jsContent = await jsResponse.text();
+                await reply(`**JavaScript File Content**:\n\n${jsContent}`);
+            }
+        } else {
+            await reply("No external JavaScript files found.");
+        }
+
+        if (mediaFiles.length > 0) {
+            await reply(`**Media Files Found**:\n${mediaFiles.join('\n')}`);
+        } else {
+            await reply("No media files (images, videos, audios) found.");
+        }
+    } catch (error) {
+        console.error(error);
+        return reply("An error occurred while fetching the website content.");
+    }
+};
+
+// Commande pour fetch avec cheerio
+cmd({
+    pattern: 'web',
+    desc: 'Fetch and parse content from a provided web link.',
+    category: 'utility',
+    react: '🌐',
+    filename: __filename
+}, async (conn, mek, m, { from, q, reply }) => {
+    if (!q) return reply("Provide a valid web link to fetch! The bot will crawl the website and fetch its HTML, CSS, JavaScript, and any media embedded in it.");
+    if (!/^https?:\/\//i.test(q)) {
+        return reply("Please provide a URL starting with http:// or https://");
+    }
+    await fetchAndParseWebsite(q, conn, m, reply);
 });
