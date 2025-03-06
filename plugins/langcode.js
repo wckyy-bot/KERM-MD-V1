@@ -1,19 +1,24 @@
 const axios = require('axios');
 const { cmd, commands } = require('../command');
 
+// Required modules
+const fetch = require('node-fetch');  // For fetching external resources (if needed)
+const yts = require('yt-search');     // For searching YouTube videos
+
+// Command setup
 cmd({
-  pattern: "langcode",
-  desc: "Display all ISO 639-1 language codes.",
-  react: "🌍",
-  category: "info",
-  filename: __filename
+  pattern: "langcode",  // Trigger for the command
+  desc: "Display all ISO 639-1 language codes.",  // Description of the command
+  react: "🌍",  // Reaction emoji
+  category: "info",  // Category of the command
+  filename: __filename  // Current filename
 }, async (bot, message, chat, { from, reply }) => {
   try {
     // Language codes list with ISO 639-1 codes and their country flags
     const languageList = `🌍 *Complete list of ISO 639-1 language codes* 🌍
 ━━━━━━━━━━━━━━━━━━━
 🇦🇫 *Pashto* ➝ ps  
-🇦🇱 *Albanian* ➝ sq 
+🇦🇱 *Albanian* ➝ sq  
 🇩🇿 *Arabic* ➝ ar  
 🇦🇲 *Armenian* ➝ hy  
 🇦🇺 *English* ➝ en  
@@ -58,12 +63,12 @@ cmd({
 ━━━━━━━━━━━━━━━━━━━
 ✅ *Use these codes for translation and other language functions!*`;
 
-    // Image URL representing world languages
-    const imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Langues_mondiales.png/800px-Langues_mondiales.png"; 
+    // Image URL: Use your own custom image URL here
+    const imageUrl = "https://files.catbox.moe/jf2g4q.jpeg"; // Replace this URL with the link to your image
 
     // Sending the message with language list and image
     await bot.sendMessage(from, {
-      image: { url: imageUrl },  // Sending the image
+      image: { url: imageUrl },  // Sending your own image
       caption: languageList  // Sending the language list
     }, { quoted: message });
 
