@@ -178,7 +178,7 @@ cmd({
 cmd({
   pattern: "image",
   alias: ["toimage"],
-  react: "🌃,
+  react: "🌃",
   desc: "Convert a sticker to an image.",
   category: "tools",
   filename: __filename,
