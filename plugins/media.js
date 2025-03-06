@@ -176,21 +176,18 @@ cmd({
 });
 cmd({
   pattern: "image",
-  alias: ["photo", "toimage"],
-  react: "✴️",
   desc: "Convert a sticker to an image.",
   category: "tools",
   filename: __filename,
 }, async (conn, mek, m, { reply }) => {
   try {
-    // Vérifier si un message est cité
+    // Vérifier si l'utilisateur a répondu à un message
     if (!m.quoted) {
       return reply("❌ Please reply to a sticker to convert it to an image.");
     }
 
-    // Vérifier si le message cité contient un sticker
-    let mime = m.quoted.mtype || ""; // Vérifie le type du message
-    if (mime !== "stickerMessage") {
+    // Vérifier si le message cité est un sticker
+    if (m.quoted.mtype !== "stickerMessage") {
       return reply("❌ The replied message is not a sticker.");
     }
 
