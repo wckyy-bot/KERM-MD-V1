@@ -174,24 +174,37 @@ cmd({
         reply("❌ Sorry, I couldn't fetch the time for the specified timezone. Please ensure the timezone is valid.");
     }
 });
-
 cmd({
   pattern: "image",
-  alias: ["toimage"],
-  react: "🌃",
+  alias: ["toimage", "photo"],
+  react: "✴️",
   desc: "Convert a sticker to an image.",
   category: "tools",
   filename: __filename,
-}, async (conn, mek, m, { reply, mime, quoted }) => {
+}, async (conn, mek, m, { reply }) => {
   try {
-    if (!quoted || !/webp/.test(mime)) {
+    // Vérifier si l'utilisateur a répondu à un message
+    if (!m.quoted) {
       return reply("❌ Please reply to a sticker to convert it to an image.");
     }
 
-    let media = await quoted.download();
-    let imageBuffer = await conn.toImage(media);
+    // Vérifier si le message cité contient un sticker
+    let mime = m.quoted.mimetype || "";
+    if (!/webp/.test(mime)) {
+      return reply("❌ The replied message is not a sticker.");
+    }
 
-    await conn.sendMessage(m.chat, { image: imageBuffer }, { quoted: mek });
+    // Télécharger le sticker
+    let media = await m.quoted.download();
+
+    // Vérifier si le téléchargement a réussi
+    if (!media) {
+      return reply("❌ Failed to download the sticker.");
+    }
+
+    // Envoyer l'image convertie
+    await conn.sendMessage(m.chat, { image: media, caption: "✅ Here is your image." }, { quoted: m });
+
   } catch (error) {
     reply("❌ An error occurred while converting the sticker to an image.");
     console.error(error);
