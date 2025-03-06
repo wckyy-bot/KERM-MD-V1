@@ -1,5 +1,6 @@
+const axios = require('axios');
+const { cmd, commands } = require('../command');
 
-// Command setup
 cmd({
   pattern: "langcode",
   desc: "Display all ISO 639-1 language codes.",
