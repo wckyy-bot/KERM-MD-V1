@@ -17,7 +17,8 @@ async function getAudioUrl(videoUrl) {
     try {
         const response = await axios.get(`https://api.ryzendesu.vip/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
         if (response.data && response.data.status === 'success') {
-            return response.data.result.url;
+            // Use the correct property "download_url" instead of "url"
+            return response.data.result.download_url;
         } else {
             throw new Error('Failed to obtain audio URL.');
         }
