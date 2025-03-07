@@ -40,6 +40,7 @@ const bodyparser = require('body-parser')
 const { tmpdir } = require('os')
 const Crypto = require('crypto')
 const path = require('path')
+const { exec } = require('child_process')
 const prefix = config.PREFIX
 
 const ownerNumber = ['237656520674']
