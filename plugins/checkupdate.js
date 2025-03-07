@@ -23,7 +23,6 @@ cmd(
       return _0x585e21('This command is only for the bot owner.');
     }
     try {
-      await _0x585e21('```🔍 Checking for KERM-MD updates...```\n');
       const { data: _0x5942d2 } = await axios.get(
         'https://api.github.com/repos/Kgtech-cmr/KERM-MD-V1/commits/main'
       );
@@ -40,12 +39,10 @@ cmd(
         console.error('Error reading package.json:', _0x2b6884);
       }
 
-      await _0x585e21(`📝 **Last Commit**: \`${_0x4d4bd0}\`\n👤 **Author**: ${_0xauthor}\n📅 **Date**: ${_0xdate}\n🔄 **Files Modified**:\n${_0xfiles}`);
-
       if (_0x4d4bd0 === _0x1ebf53) {
         return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
       } else {
-        return _0x585e21('```🔄 Updates are available for KERM-MD.```\n');
+        await _0x585e21(`🔄 **Updates are available for KERM-MD.**\n📝 **Last Commit**: \`${_0x4d4bd0}\`\n👤 **Author**: ${_0xauthor}\n📅 **Date**: ${_0xdate}\n🔄 **Files Modified**:\n${_0xfiles}\n\nTo update the bot, please run the command \`.update\``);
       }
     } catch (_0x781606) {
       console.error('Check update error:', _0x781606);
