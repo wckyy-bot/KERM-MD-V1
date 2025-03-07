@@ -10,7 +10,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { reply, from }) => {
     try {
-        const repoPath = "/app/KERM-MD-V1"; // Replace with the actual path to your repository
+        const repoPath = "/path/to/KERM-MD-V1"; // Replace with the actual path to your repository
         const maxCommits = 10; // Number of commits to display
 
         // Change to the repository directory
