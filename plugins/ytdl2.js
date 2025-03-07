@@ -59,6 +59,11 @@ cmd({
                     const audioUrl = audioFormats[0].url;
 
                     console.log("URL de l'audio obtenue :", audioUrl);
+                    if (!audioUrl) {
+                        console.error("URL de l'audio non valide.");
+                        return reply("Failed to obtain a valid audio URL.");
+                    }
+
                     await conn.sendMessage(remoteJid, { delete: message.key });
                     await conn.sendMessage(remoteJid, { react: { text: '⬆️', key: message.key } });
 
