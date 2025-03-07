@@ -132,8 +132,8 @@ cmd({
       }
     });
   } catch (error) {
-    console.error(error);
-    reply('' + error);
+    console.error("Error:", error);
+    reply(`An error occurred: ${error.message}`);
   }
 });
 
