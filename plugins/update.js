@@ -21,7 +21,7 @@ cmd(
   {
     pattern: 'update',
     alias: ['upgrade', 'sync'],
-    react: '🆕',
+    react: '🔄',
     desc: 'Update the bot to the latest version.',
     category: 'misc',
     filename: __filename,
