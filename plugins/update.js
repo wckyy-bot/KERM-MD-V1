@@ -10,7 +10,7 @@ CONTACT ME HERE +237656520674
 YT: KermHackTools
 Github: Kgtech-cmr
 */
-
+const {cmd , commands} = require('../command');
 const { exec } = require('child_process'); // Import child_process pour exécuter les commandes shell
 const axios = require('axios');
 const fs = require('fs');
