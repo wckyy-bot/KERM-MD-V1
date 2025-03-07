@@ -30,6 +30,7 @@ cmd(
       const _0x4d4bd0 = _0x5942d2.sha;
       const _0xauthor = _0x5942d2.commit.author.name;
       const _0xdate = new Date(_0x5942d2.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC' });
+      const _0xfiles = _0x5942d2.files.map(file => `📄 ${file.filename}`).join('\n');
       
       let _0x1ebf53 = 'unknown';
       try {
@@ -39,7 +40,7 @@ cmd(
         console.error('Error reading package.json:', _0x2b6884);
       }
 
-      await _0x585e21(`Last commit: ${_0x4d4bd0}\nAuthor: ${_0xauthor}\nDate: ${_0xdate}`);
+      await _0x585e21(`📝 **Last Commit**: \`${_0x4d4bd0}\`\n👤 **Author**: ${_0xauthor}\n📅 **Date**: ${_0xdate}\n🔄 **Files Modified**:\n${_0xfiles}`);
 
       if (_0x4d4bd0 === _0x1ebf53) {
         return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
