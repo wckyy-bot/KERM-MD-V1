@@ -54,14 +54,15 @@ cmd(
       if (latestCommitHash === _0x1ebf53) {
         return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
       } else {
-        const commitMessages = commits
-          .map(commit => {
-            const date = new Date(commit.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC' });
-            return `🔄 **Commit**: [\`${commit.sha.slice(0, 7)}\`](${commit.html_url})\n👤 **Author**: ${commit.commit.author.name}\n📅 **Date**: ${date}\n📝 **Message**: ${commit.commit.message}`;
-          })
-          .join('\n\n');
+        const commitMessages = await Promise.all(commits.map(async commit => {
+          const { data: commitDetails } = await axios.get(commit.url);
+          const fileNames = commitDetails.files.map(file => file.filename).join(', ');
+          const date = new Date(commit.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC' });
+          return `🔄 **Commit**: [\`${commit.sha.slice(0, 7)}\`](${commit.html_url})\n👤 **Author**: ${commit.commit.author.name}\n📅 **Date**: ${date}\n📝 **Files Changed**: ${fileNames}`;
+        }));
+        const commitMessagesStr = commitMessages.join('\n\n');
 
-        await _0x585e21(`🔄 **Updates are available for KERM-MD.**\n\n${commitMessages}\n\nTo update the bot, please run the command \`.update\``);
+        await _0x585e21(`🔄 **Updates are available for KERM-MD.**\n\n${commitMessagesStr}\n\nTo update the bot, please run the command \`.update\``);
       }
     } catch (_0x781606) {
       console.error('Check update error:', _0x781606);
