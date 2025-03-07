@@ -10,7 +10,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { reply, from }) => {
     try {
-        const repoPath = "/path/to/KERM-MD-V1"; // Replace with the actual path to your repository
+        const repoPath = "./"; // Change to the actual path to your repository if needed
         const maxCommits = 10; // Number of commits to display
 
         // Change to the repository directory
@@ -31,7 +31,7 @@ cmd({
 
             // Check if there are any commits in the output
             if (!stdout.trim()) {
-                reply("No recent modifications found.");
+                reply("Aucune modification récente trouvée.");
                 return;
             }
 
