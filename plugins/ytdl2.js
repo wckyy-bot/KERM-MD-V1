@@ -91,14 +91,19 @@ cmd({
     message.ev.on("messages.upsert", async update => {
       const newMessage = update.messages[0];
       if (!newMessage.message) return;
+
+      const extendedTextMessage = newMessage.message.extendedTextMessage;
+      if (!extendedTextMessage) return;
       
-      const text = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const text = newMessage.message.conversation || extendedTextMessage.text;
       const remoteJid = newMessage.key.remoteJid;
-      const isReplyToOriginal = newMessage.message.extendedTextMessage && newMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
+      const contextInfo = extendedTextMessage.contextInfo;
+      const isReplyToOriginal = contextInfo && contextInfo.stanzaId === messageId;
       
       if (isReplyToOriginal) {
         await message.sendMessage(remoteJid, { react: { text: '⬇️', key: newMessage.key } });
-        const downloadLink = await fetchJson('https://api.ryzendesu.vip/api/downloader/ytmp3?url=' + videoUrl).result.download_url;
+        const fetchResult = await fetchJson('https://api.ryzendesu.vip/api/downloader/ytmp3?url=' + videoUrl);
+        const downloadLink = fetchResult.result.download_url;
         
         await message.sendMessage(remoteJid, { delete: messageKey.key });
         await message.sendMessage(remoteJid, { react: { text: '⬆️', key: newMessage.key } });
@@ -114,27 +119,4 @@ cmd({
                 mediaType: 1,
                 sourceUrl: video.url,
                 thumbnailUrl: video.thumbnail,
-                renderLargerThumbnail: true,
-                showAdAttribution: true
-              }
-            }
-          }, { quoted: newMessage });
-          await message.sendMessage(remoteJid, { react: { text: '✅', key: newMessage.key } });
-        } else if (text === '2') {
-          await message.sendMessage(remoteJid, {
-            document: { url: downloadLink },
-            mimetype: "audio/mp3",
-            fileName: video.title + ".mp3",
-            caption: "\n> *© Generated for you By Kerm MD V1 ❤️*\n "
-          }, { quoted: newMessage });
-          await message.sendMessage(remoteJid, { react: { text: '✅', key: newMessage.key } });
-        }
-      }
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    reply(`An error occurred: ${error.message}`);
-  }
-});
-
-// Repeat the same process for the other cmd commands
+                renderLargerThumbnail: true
