@@ -57,8 +57,8 @@ cmd(
         const commitMessages = await Promise.all(commits.map(async commit => {
           const { data: commitDetails } = await axios.get(commit.url);
           const fileNames = commitDetails.files.map(file => file.filename).join(', ');
-          const date = new Date(commit.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC' });
-          return `🔄 **Commit**: [\`${commit.sha.slice(0, 7)}\`](${commit.html_url})\n👤 **Author**: ${commit.commit.author.name}\n📅 **Date**: ${date}\n📝 **Files Changed**: ${fileNames}`;
+          const date = new Date(commit.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC', hour12: false });
+          return `📝 **Files Changed**: ${fileNames} 📅 **Date**: ${date}`;
         }));
         const commitMessagesStr = commitMessages.join('\n\n');
 
