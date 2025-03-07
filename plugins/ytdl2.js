@@ -1,4 +1,3 @@
-
 const ytdl = require('ytdl-core');
 const yts = require("yt-search");
 const { cmd } = require("../command");
@@ -15,7 +14,7 @@ function convertYouTubeLink(link) {
 }
 
 cmd({
-    pattern: "play4",
+    pattern: "play",
     desc: "To download songs.",
     react: '☃️',
     category: "download",
@@ -23,7 +22,7 @@ cmd({
 }, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         if (!q) {
-            return reply("Please give me a URL or title.");
+            return reply("Please provide a URL or title.");
         }
         q = convertYouTubeLink(q);
         const searchResults = await yts(q);
@@ -31,7 +30,7 @@ cmd({
         const videoUrl = video.url;
         const message = await conn.sendMessage(from, {
             image: { url: video.thumbnail },
-            caption: `🎶 *𝖪𝖤𝖱𝖬-𝖬𝖣－𝖵1* 🎶\n━━━━━━━━━━━━━━━━━\n*⟣ Kᴇʀᴍ Sᴏɴɢ Dᴏᴡɴʟᴏᴀᴅᴇʀ ⟢*\n━━━━━━━━━━━━━━━━━\n*🎵 Title:* ${video.title}\n*🕒 Duration:* ${video.timestamp}\n*🌐 URL:* ${video.url}`
+            caption: `🎶 *KERM-MD-V1* 🎶\n━━━━━━━━━━━━━━━━━\n*⟣ Kᴇʀᴍ Sᴏɴɢ Dᴏᴡɴʟᴏᴀᴅᴇʀ ⟢*\n━━━━━━━━━━━━━━━━━\n*🎵 Title:* ${video.title}\n*🕒 Duration:* ${video.timestamp}\n*🌐 URL:* ${video.url}\n\nReply with:\n1️⃣ for audio\n2️⃣ for audio file`
         }, { quoted: mek });
 
         const messageId = message.key.id;
@@ -53,23 +52,32 @@ cmd({
                 await conn.sendMessage(remoteJid, { delete: message.key });
                 await conn.sendMessage(remoteJid, { react: { text: '⬆️', key: message.key } });
 
-                await conn.sendMessage(remoteJid, {
-                    audio: { url: audioUrl },
-                    mimetype: "audio/mpeg",
-                    contextInfo: {
-                        externalAdReply: {
-                            title: video.title,
-                            body: video.videoId,
-                            mediaType: 1,
-                            sourceUrl: video.url,
-                            thumbnailUrl: video.thumbnail,
-                            renderLargerThumbnail: true,
-                            showAdAttribution: true
+                if (text === '1') {
+                    await conn.sendMessage(remoteJid, {
+                        audio: { url: audioUrl },
+                        mimetype: "audio/mpeg",
+                        contextInfo: {
+                            externalAdReply: {
+                                title: video.title,
+                                body: video.videoId,
+                                mediaType: 1,
+                                sourceUrl: video.url,
+                                thumbnailUrl: video.thumbnail,
+                                renderLargerThumbnail: true,
+                                showAdAttribution: true
+                            }
                         }
-                    }
-                }, { quoted: message });
-
-                await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                    }, { quoted: message });
+                    await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                } else if (text === '2') {
+                    await conn.sendMessage(remoteJid, {
+                        document: { url: audioUrl },
+                        mimetype: "audio/mpeg",
+                        fileName: `${video.title}.mp3`,
+                        caption: "\n> *© Generated for you by KERM-MD-V1 ❤️*\n"
+                    }, { quoted: message });
+                    await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                }
             }
         });
     } catch (error) {
