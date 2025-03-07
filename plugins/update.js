@@ -11,4 +11,96 @@ YT: KermHackTools
 Github: Kgtech-cmr
 */
 
-const _0x3808de=_0x3c4a;(function(_0x1580e3,_0x492e23){const _0x1c4a21=_0x3c4a,_0x33fb1b=_0x1580e3();while(!![]){try{const _0x379d94=-parseInt(_0x1c4a21(0xc1))/0x1+parseInt(_0x1c4a21(0xe7))/0x2+-parseInt(_0x1c4a21(0xe0))/0x3+-parseInt(_0x1c4a21(0xc6))/0x4*(-parseInt(_0x1c4a21(0xea))/0x5)+-parseInt(_0x1c4a21(0xbc))/0x6*(-parseInt(_0x1c4a21(0xcf))/0x7)+parseInt(_0x1c4a21(0xc0))/0x8+parseInt(_0x1c4a21(0xd5))/0x9*(-parseInt(_0x1c4a21(0xde))/0xa);if(_0x379d94===_0x492e23)break;else _0x33fb1b['push'](_0x33fb1b['shift']());}catch(_0x5be5e3){_0x33fb1b['push'](_0x33fb1b['shift']());}}}(_0x28fe,0x5d68d));const {cmd,commands}=require(_0x3808de(0xc5)),{exec}=require(_0x3808de(0xd7)),axios=require(_0x3808de(0xd1)),fs=require('fs'),path=require(_0x3808de(0xbb)),AdmZip=require(_0x3808de(0xe3));function antiDebug(_0x1332e0){function _0x56609e(_0x2cf487){const _0x35dcd4=_0x3c4a;if(typeof _0x2cf487===_0x35dcd4(0xcb))return function(){}[_0x35dcd4(0xb9)](_0x35dcd4(0xc3))[_0x35dcd4(0xf0)](_0x35dcd4(0xda));else(''+_0x2cf487/_0x2cf487)[_0x35dcd4(0xdf)]!==0x1||_0x2cf487%0x14===0x0?function(){return!![];}[_0x35dcd4(0xb9)](_0x35dcd4(0xe5))[_0x35dcd4(0xbd)](_0x35dcd4(0xdb)):function(){return![];}[_0x35dcd4(0xb9)](_0x35dcd4(0xe5))['apply']('stateObject');_0x56609e(++_0x2cf487);}try{if(_0x1332e0)return _0x56609e;else _0x56609e(0x0);}catch(_0x35c505){}}function _0x3c4a(_0x2aa8e0,_0x22a0f2){const _0x28fe08=_0x28fe();return _0x3c4a=function(_0x3c4ada,_0x38ebb6){_0x3c4ada=_0x3c4ada-0xb9;let _0x5ca9c6=_0x28fe08[_0x3c4ada];return _0x5ca9c6;},_0x3c4a(_0x2aa8e0,_0x22a0f2);}cmd({'pattern':'update','alias':[_0x3808de(0xbf),_0x3808de(0xe8)],'react':'🔄','desc':_0x3808de(0xec),'category':_0x3808de(0xed),'filename':__filename},async(_0x414b3c,_0x18c977,_0x56614e,{from:_0x1ceeeb,reply:_0x17ef4e,sender:_0xc6f883,isOwner:_0x18a993})=>{const _0x371d65=_0x3808de;if(!_0x18a993)return _0x17ef4e(_0x371d65(0xdc));try{await _0x17ef4e(_0x371d65(0xca));const {data:_0x3d4965}=await axios['get'](_0x371d65(0xc7)),_0x580a09=_0x3d4965[_0x371d65(0xd6)];let _0x4f50be=_0x371d65(0xe2);try{const _0x47051e=require('../package.json');_0x4f50be=_0x47051e[_0x371d65(0xd2)]||'unknown';}catch(_0x2df4b6){console[_0x371d65(0xd8)](_0x371d65(0xc4),_0x2df4b6);}if(_0x580a09===_0x4f50be)return _0x17ef4e(_0x371d65(0xd9));await _0x17ef4e('```KERM-MD-V1\x20Bot\x20Updating...🚀```\x0a');const _0x50306d=path['join'](__dirname,'latest.zip'),{data:_0x5d6acf}=await axios['get'](_0x371d65(0xd0),{'responseType':_0x371d65(0xc9)});fs[_0x371d65(0xd4)](_0x50306d,_0x5d6acf),await _0x17ef4e(_0x371d65(0xbe));const _0x3bf60e=path[_0x371d65(0xcd)](__dirname,_0x371d65(0xdd)),_0x4a90c1=new AdmZip(_0x50306d);_0x4a90c1[_0x371d65(0xe9)](_0x3bf60e,!![]),await _0x17ef4e(_0x371d65(0xeb));const _0x38c64c=path['join'](_0x3bf60e,_0x371d65(0xba)),_0x3cc96c=path[_0x371d65(0xcd)](__dirname,'..');copyFolderSync(_0x38c64c,_0x3cc96c),fs[_0x371d65(0xc2)](_0x50306d),fs['rmSync'](_0x3bf60e,{'recursive':!![],'force':!![]}),await _0x17ef4e(_0x371d65(0xee)),process[_0x371d65(0xd3)](0x0);}catch(_0x157ddd){console[_0x371d65(0xd8)](_0x371d65(0xf1),_0x157ddd),_0x17ef4e(_0x371d65(0xcc));}});function _0x28fe(){const _0x3233de=['10946133PPFrmc','sha','child_process','error','```✅\x20Your\x20KERM-MD-V1\x20bot\x20is\x20already\x20up-to-date!```\x0a','counter','action','This\x20command\x20is\x20only\x20for\x20the\x20bot\x20owner.','latest','10qOpuxo','length','731652VogKoh','\x20to\x20preserve\x20custom\x20settings.','unknown','adm-zip','log','debugger','config.js','1271610fkgPAk','sync','extractAllTo','473185FMTtjc','```🔄\x20Replacing\x20files...```\x0a','Update\x20the\x20bot\x20to\x20the\x20latest\x20version.','misc','```🔄\x20Restarting\x20the\x20bot\x20to\x20apply\x20updates...```\x0a','readdirSync','apply','Update\x20error:','constructor','KERM-MD-V1-main','path','48uwxnli','call','```📦\x20Extracting\x20the\x20latest\x20code...```\x0a','upgrade','4818680NkPOoP','706817akoDfU','unlinkSync','while\x20(true)\x20{}','Error\x20reading\x20package.json:','../command','28ShLcEJ','https://api.github.com/repos/kgtech-cmr/KERM-MD-V1/commits/main','existsSync','arraybuffer','```🔍\x20Checking\x20for\x20KERM-MD-V1\x20updates...```\x0a','string','❌\x20Update\x20failed.\x20Please\x20try\x20manually.','join','copyFileSync','567826qdWuVM','https://github.com/kgtech-cmr/KERM-MD-V1/archive/main.zip','axios','commitHash','exit','writeFileSync'];_0x28fe=function(){return _0x3233de;};return _0x28fe();}function copyFolderSync(_0x2fe244,_0x166e08){const _0x4620a8=_0x3808de;!fs[_0x4620a8(0xc8)](_0x166e08)&&fs['mkdirSync'](_0x166e08,{'recursive':!![]});const _0x3cd0c0=fs[_0x4620a8(0xef)](_0x2fe244);for(const _0x28f9b8 of _0x3cd0c0){const _0x4de99b=path['join'](_0x2fe244,_0x28f9b8),_0x251638=path[_0x4620a8(0xcd)](_0x166e08,_0x28f9b8);if(_0x28f9b8===_0x4620a8(0xe6)||_0x28f9b8==='app.json'){console[_0x4620a8(0xe4)]('Skipping\x20'+_0x28f9b8+_0x4620a8(0xe1));continue;}fs['lstatSync'](_0x4de99b)['isDirectory']()?copyFolderSync(_0x4de99b,_0x251638):fs[_0x4620a8(0xce)](_0x4de99b,_0x251638);}}
+const { cmd } = require('../command');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const AdmZip = require('adm-zip');
+
+cmd(
+  {
+    pattern: 'update',
+    alias: ['upgrade', 'sync'],
+    react: '🆕',
+    desc: 'Update the bot to the latest version.',
+    category: 'misc',
+    filename: __filename,
+  },
+  async (
+    _0x16bb3a,
+    _0x28ebc3,
+    _0x20184b,
+    { from: _0x38ab0b, reply: _0x585e21, sender: _0x5f51fe, isOwner: _0x607c9a }
+  ) => {
+    if (!_0x607c9a) {
+      return _0x585e21('This command is only for the bot owner.');
+    }
+    try {
+      await _0x585e21('```🔍 Checking for KERM-MD updates...```\n');
+      const { data: _0x5942d2 } = await axios.get(
+        'https://api.github.com/repos/Kgtech-cmr/KERM-MD-V1/commits/main'
+      );
+      const _0x4d4bd0 = _0x5942d2.sha;
+      let _0x1ebf53 = 'unknown';
+      try {
+        const _0xc59331 = require('../package.json');
+        _0x1ebf53 = _0xc59331.commitHash || 'unknown';
+      } catch (_0x2b6884) {
+        console.error('Error reading package.json:', _0x2b6884);
+      }
+      if (_0x4d4bd0 === _0x1ebf53) {
+        return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
+      }
+      await _0x585e21('```Subzero Bot Updating...🚀```\n');
+      const _0x127dfd = path.join(__dirname, 'latest.zip'),
+        { data: _0x50a220 } = await axios.get(
+          'https://github.com/Kgtech-cmr/KERM-MD-V1/archive/main.zip',
+          { responseType: 'arraybuffer' }
+        );
+      fs.writeFileSync(_0x127dfd, _0x50a220);
+      await _0x585e21('```📦 Extracting the latest code...```\n');
+      const _0xb0cd5 = path.join(__dirname, 'latest'),
+        _0x395f72 = new AdmZip(_0x127dfd);
+      _0x395f72.extractAllTo(_0xb0cd5, true);
+      await _0x585e21('```🔄 Replacing files...```\n');
+      const _0x5839a6 = path.join(_0xb0cd5, 'KERM-MD-V1-main'),
+        _0x120a2d = path.join(__dirname, '..');
+      copyFolderSync(_0x5839a6, _0x120a2d);
+      fs.unlinkSync(_0x127dfd);
+      fs.rmSync(_0xb0cd5, {
+        recursive: true,
+        force: true,
+      });
+      // Mettre à jour le hash du commit dans package.json
+      const packagePath = path.join(__dirname, '../package.json');
+      const packageData = require(packagePath);
+      packageData.commitHash = _0x4d4bd0;
+      fs.writeFileSync(packagePath, JSON.stringify(packageData, null, 2));
+      await _0x585e21('```🔄 Restarting the bot to apply updates...```\n');
+      process.exit(0);
+    } catch (_0x781606) {
+      console.error('Update error:', _0x781606);
+      _0x585e21('❌ Update failed. Please try manually.');
+    }
+  }
+);
+
+function copyFolderSync(src, dest) {
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+  const entries = fs.readdirSync(src);
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry);
+    const destPath = path.join(dest, entry);
+    if (entry === 'config.js' || entry === 'app.json') {
+      console.log('Skipping ' + entry + ' to preserve custom settings.');
+      continue;
+    }
+    if (fs.lstatSync(srcPath).isDirectory()) {
+      copyFolderSync(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
