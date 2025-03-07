@@ -28,6 +28,9 @@ cmd(
         'https://api.github.com/repos/Kgtech-cmr/KERM-MD-V1/commits/main'
       );
       const _0x4d4bd0 = _0x5942d2.sha;
+      const _0xauthor = _0x5942d2.commit.author.name;
+      const _0xdate = new Date(_0x5942d2.commit.author.date).toLocaleString('en-US', { timeZone: 'UTC' });
+      
       let _0x1ebf53 = 'unknown';
       try {
         const _0xc59331 = require('../package.json');
@@ -35,6 +38,9 @@ cmd(
       } catch (_0x2b6884) {
         console.error('Error reading package.json:', _0x2b6884);
       }
+
+      await _0x585e21(`Last commit: ${_0x4d4bd0}\nAuthor: ${_0xauthor}\nDate: ${_0xdate}`);
+
       if (_0x4d4bd0 === _0x1ebf53) {
         return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
       } else {
