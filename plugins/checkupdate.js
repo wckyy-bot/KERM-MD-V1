@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const { exec } = require('child_process');
+const simpleGit = require('simple-git');
 const moment = require("moment");
 
 cmd({
@@ -10,54 +10,33 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { reply, from }) => {
     try {
-        // Check if Git is installed
-        exec('git --version', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Git is not installed: ${error.message}`);
-                reply(`Git is not installed: ${error.message}`);
-                return;
-            }
+        const repoPath = "./"; // Change to the actual path to your repository if needed
+        const maxCommits = 10; // Number of commits to display
 
-            const repoPath = "./"; // Change to the actual path to your repository if needed
-            const maxCommits = 10; // Number of commits to display
+        // Initialize simple-git with the repository path
+        const git = simpleGit(repoPath);
 
-            // Change to the repository directory
-            process.chdir(repoPath);
+        // Get the latest commits with file changes
+        const log = await git.log({ n: maxCommits });
 
-            // Execute the git log command to get the latest commits with file changes
-            exec(`git log -${maxCommits} --name-status --pretty=format:"%h - %an, %ar : %s"`, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error executing git log: ${error.message}`);
-                    reply(`Error executing git log: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.error(`Git log stderr: ${stderr}`);
-                    reply(`Git log stderr: ${stderr}`);
-                    return;
-                }
+        if (!log.all.length) {
+            reply("Aucune modification récente trouvée.");
+            return;
+        }
 
-                // Check if there are any commits in the output
-                if (!stdout.trim()) {
-                    reply("Aucune modification récente trouvée.");
-                    return;
-                }
+        const currentTime = moment().format("HH:mm:ss");
+        const currentDate = moment().format("dddd, MMMM Do YYYY");
 
-                const currentTime = moment().format("HH:mm:ss");
-                const currentDate = moment().format("dddd, MMMM Do YYYY");
-
-                const formattedUpdates = `
+        const formattedUpdates = `
 🔄 *KERM MD V1 LATEST UPDATES* 🔄
 🕒 *Time*: ${currentTime}
 📅 *Date*: ${currentDate}
-                
+            
 *Latest ${maxCommits} commits:*
-${stdout}
-                `.trim();
+${log.all.map(commit => `${commit.hash} - ${commit.author_name}, ${commit.fromNow()} : ${commit.message}`).join('\n')}
+        `.trim();
 
-                reply(formattedUpdates);
-            });
-        });
+        reply(formattedUpdates);
     } catch (err) {
         console.error(`Failed to check updates: ${err.message}`);
         reply(`Failed to check updates: ${err.message}`);
