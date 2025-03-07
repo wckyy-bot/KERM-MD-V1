@@ -67,7 +67,7 @@ cmd({
   react: '☃️',
   category: "download",
   filename: __filename
-}, async (message, match, args, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (message, match, cmdArgs, { from, quoted, body, isCmd, command, arguments: cmdArguments, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, reply }) => {
   try {
     if (!q) {
       return reply("Please give me a URL or title.");
