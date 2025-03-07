@@ -42,7 +42,7 @@ cmd(
       if (_0x4d4bd0 === _0x1ebf53) {
         return _0x585e21('```✅ Your KERM-MD bot is already up-to-date!```\n');
       } else {
-        await _0x585e21(`🔄 **Updates are available for KERM-MD.**\n📝 **Last Commit**: \`${_0x4d4bd0}\`\n👤 **Author**: ${_0xauthor}\n📅 **Date**: ${_0xdate}\n🔄 **Files Modified**:\n${_0xfiles}\n\nTo update the bot, please run the command \`.update\``);
+        await _0x585e21(`🔄 *Updates are available for KERM-MD.*\n\n📝 *Last Commit*: \`${_0x4d4bd0}\`\n👤 *Author*: ${_0xauthor}\n📅 *Date*: ${_0xdate}\n🔄 *Files Modified*:\n${_0xfiles}\n\nTo update the bot, please run the command \`.update\``);
       }
     } catch (_0x781606) {
       console.error('Check update error:', _0x781606);
