@@ -10,44 +10,53 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { reply, from }) => {
     try {
-        const repoPath = "./"; // Change to the actual path to your repository if needed
-        const maxCommits = 10; // Number of commits to display
-
-        // Change to the repository directory
-        process.chdir(repoPath);
-
-        // Execute the git log command to get the latest commits with file changes
-        exec(`git log -${maxCommits} --name-status --pretty=format:"%h - %an, %ar : %s"`, (error, stdout, stderr) => {
+        // Check if Git is installed
+        exec('git --version', (error, stdout, stderr) => {
             if (error) {
-                console.error(`Error executing git log: ${error.message}`);
-                reply(`Error executing git log: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`Git log stderr: ${stderr}`);
-                reply(`Git log stderr: ${stderr}`);
+                console.error(`Git is not installed: ${error.message}`);
+                reply(`Git is not installed: ${error.message}`);
                 return;
             }
 
-            // Check if there are any commits in the output
-            if (!stdout.trim()) {
-                reply("Aucune modification récente trouvée.");
-                return;
-            }
+            const repoPath = "./"; // Change to the actual path to your repository if needed
+            const maxCommits = 10; // Number of commits to display
 
-            const currentTime = moment().format("HH:mm:ss");
-            const currentDate = moment().format("dddd, MMMM Do YYYY");
+            // Change to the repository directory
+            process.chdir(repoPath);
 
-            const formattedUpdates = `
+            // Execute the git log command to get the latest commits with file changes
+            exec(`git log -${maxCommits} --name-status --pretty=format:"%h - %an, %ar : %s"`, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error executing git log: ${error.message}`);
+                    reply(`Error executing git log: ${error.message}`);
+                    return;
+                }
+                if (stderr) {
+                    console.error(`Git log stderr: ${stderr}`);
+                    reply(`Git log stderr: ${stderr}`);
+                    return;
+                }
+
+                // Check if there are any commits in the output
+                if (!stdout.trim()) {
+                    reply("Aucune modification récente trouvée.");
+                    return;
+                }
+
+                const currentTime = moment().format("HH:mm:ss");
+                const currentDate = moment().format("dddd, MMMM Do YYYY");
+
+                const formattedUpdates = `
 🔄 *KERM MD V1 LATEST UPDATES* 🔄
 🕒 *Time*: ${currentTime}
 📅 *Date*: ${currentDate}
-            
+                
 *Latest ${maxCommits} commits:*
 ${stdout}
-            `.trim();
+                `.trim();
 
-            reply(formattedUpdates);
+                reply(formattedUpdates);
+            });
         });
     } catch (err) {
         console.error(`Failed to check updates: ${err.message}`);
