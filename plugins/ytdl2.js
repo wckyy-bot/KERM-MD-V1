@@ -34,6 +34,8 @@ cmd({
             return reply("No video found for the provided URL or title.");
         }
         const videoUrl = video.url;
+        console.log("Vidéo trouvée:", videoUrl);
+
         const message = await conn.sendMessage(from, {
             image: { url: video.thumbnail },
             caption: `🎶 *KERM-MD-V1* 🎶\n━━━━━━━━━━━━━━━━━\n*⟣ Kᴇʀᴍ Sᴏɴɢ Dᴏᴡɴʟᴏᴀᴅᴇʀ ⟢*\n━━━━━━━━━━━━━━━━━\n*🎵 Title:* ${video.title}\n*🕒 Duration:* ${video.timestamp}\n*🌐 URL:* ${video.url}\n\nReply with:\n1️⃣ for audio\n2️⃣ for audio file`
