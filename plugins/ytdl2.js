@@ -28,7 +28,7 @@ async function getAudioUrl(videoUrl) {
 }
 
 cmd({
-    pattern: "play4",
+    pattern: "play3",
     desc: "To download songs.",
     react: '☃️',
     category: "download",
