@@ -18,7 +18,7 @@ const axios = require('axios');
                          cmd({
                              pattern: "define",
                              desc: "📚 Get the definition of a word",
-                             react: "🔍",
+                             react: "🧠",
                              category: "Auther",
                              filename: __filename
                          },
