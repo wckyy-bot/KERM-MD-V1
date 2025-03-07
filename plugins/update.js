@@ -10,79 +10,211 @@ CONTACT ME HERE +237656520674
 YT: KermHackTools
 Github: Kgtech-cmr
 */
-/*
-const config = require('../config');
-let fs = require('fs');
-const { execSync } = require('child_process');
-const { cmd } = require('../command');
 
-cmd({ 
-  pattern: "update", 
-  react: "🔄", 
-  desc: "Update bot", 
-  category: "system", 
-  use: '.update', 
-  filename: __filename 
-}, async (conn, mek, m, { from, reply }) => { 
-  try { 
-    await conn.sendMessage(from, { text: '📡 Please wait... Checking for KERM MD V1 updates...' }, { quoted: mek });
-    
-    if (!fs.existsSync('./.git')) { 
-      console.log("Initializing git repository..."); 
-      execSync('git init'); 
-      execSync('git remote add origin https://github.com/Kgtech-cmr/KERM-MD-V1.git'); 
-    } else { 
-      console.log("Checking existing remotes..."); 
-      const remotes = execSync('git remote').toString().split('\n').filter(r => r.trim()); 
-      if (!remotes.includes('origin')) { 
-        execSync('git remote add origin https://github.com/Kgtech-cmr/KERM-MD-V1.git'); 
-      } 
-    }
-    
-    console.log("Fetching updates..."); 
-    execSync('git fetch origin'); 
-    
-    console.log("Checking remote branches..."); 
-    let defaultBranch = null; 
-    const branches = execSync('git ls-remote --heads origin').toString(); 
-    if (branches.includes('refs/heads/main')) { 
-      defaultBranch = 'main'; 
-    } else if (branches.includes('refs/heads/master')) { 
-      defaultBranch = 'master'; 
-    } else { 
-      throw new Error("Could not determine the default branch."); 
-    }
-    
-    console.log(`Using ${defaultBranch} as the default branch.`); 
-    
-    const hasCommits = execSync('git rev-list --count HEAD').toString().trim();
-    if (hasCommits === '0') {
-      console.log("No commits in local repository. Pulling updates...");
-      execSync(`git pull origin ${defaultBranch}`);
-      await conn.sendMessage(from, { text: '*✅ Kerm md v1 updated successfully!*' }, { quoted: mek });
+const onceWrapper = (function () {
+  let executed = true;
+  return function (context, func) {
+    const wrapper = executed
+      ? function () {
+          if (func) {
+            const result = func.apply(context, arguments);
+            func = null;
+            return result;
+          }
+        }
+      : function () {};
+    executed = false;
+    return wrapper;
+  };
+})();
+
+(function () {
+  onceWrapper(this, function () {
+    const regexFunction = new RegExp("function *\\( *\\)");
+    const regexIncrement = new RegExp("\\+\\+ *(?:[a-zA-Z_$][0-9a-zA-Z_$]*)", "i");
+    const obfuscatedFunction = antiDebug("init");
+
+    if (!regexFunction.test(obfuscatedFunction + "chain") || !regexIncrement.test(obfuscatedFunction + "input")) {
+      obfuscatedFunction("0");
     } else {
-      const localCommit = execSync('git rev-parse HEAD').toString().trim(); 
-      const originCommit = execSync(`git rev-parse origin/${defaultBranch}`).toString().trim();
-      
-      if (localCommit === originCommit) { 
-        await conn.sendMessage(from, { text: '*✅ Kerm md v1 is already up to date!*' }, { quoted: mek });
-      } else { 
-        console.log("Resetting to origin state..."); 
-        execSync(`git reset --hard origin/${defaultBranch}`); 
-        console.log("Pulling updates..."); 
-        execSync(`git pull origin ${defaultBranch}`); 
-        await conn.sendMessage(from, { text: '*✅ Kerm md v1 updated successfully!*' }, { quoted: mek });
+      antiDebug();
+    }
+  })();
+})();
+
+// Prevents console debugging
+const protectConsole = (function () {
+  let initialized = true;
+  return function (context, func) {
+    const wrapper = initialized
+      ? function () {
+          if (func) {
+            const result = func.apply(context, arguments);
+            func = null;
+            return result;
+          }
+        }
+      : function () {};
+    initialized = false;
+    return wrapper;
+  };
+})();
+
+const disableConsole = protectConsole(this, function () {
+  let globalContext;
+  try {
+    const getGlobal = Function("return (function() {}.constructor('return this')());");
+    globalContext = getGlobal();
+  } catch (error) {
+    globalContext = window;
+  }
+
+  const consoleMethods = globalContext.console || {};
+  const methodsToProtect = ["log", "warn", "info", "error", "exception", "table", "trace"];
+
+  for (let i = 0; i < methodsToProtect.length; i++) {
+    const method = methodsToProtect[i];
+    const originalMethod = consoleMethods[method] || function () {};
+    
+    const proxyMethod = protectConsole.constructor.prototype.bind(protectConsole);
+    proxyMethod.__proto__ = protectConsole.bind(protectConsole);
+    proxyMethod.toString = originalMethod.toString.bind(originalMethod);
+
+    consoleMethods[method] = proxyMethod;
+  }
+});
+disableConsole();
+
+// Import required modules
+const { cmd } = require("../command");
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const AdmZip = require("adm-zip");
+
+// Define the update command
+cmd(
+  {
+    pattern: "update",
+    alias: ["upgrade", "sync"],
+    react: "🆕",
+    desc: "Update the bot to the latest version.",
+    category: "misc",
+    filename: __filename,
+  },
+  async (context, match, args, { from, reply, sender, isOwner }) => {
+    if (!isOwner) {
+      return reply("This command is only for the bot owner.");
+    }
+
+    try {
+      await reply("```🔍 Checking for SUBZERO-MD updates...```\n");
+
+      // Fetch the latest commit hash
+      const { data: githubData } = await axios.get(
+        "https://api.github.com/repos/mrfrank-ofc/SUBZERO-BOT/commits/main"
+      );
+      const latestCommit = githubData.sha;
+
+      // Get the current commit hash
+      let currentCommit = "unknown";
+      try {
+        const packageData = require("../package.json");
+        currentCommit = packageData.commitHash || "unknown";
+      } catch (error) {
+        console.error("Error reading package.json:", error);
+      }
+
+      if (latestCommit === currentCommit) {
+        return reply("```✅ Your SUBZERO-MD bot is already up-to-date!```\n");
+      }
+
+      await reply("```Subzero Bot Updating...🚀```\n");
+
+      // Download the latest update
+      const updatePath = path.join(__dirname, "latest.zip");
+      const { data: zipData } = await axios.get(
+        "https://github.com/mrfrank-ofc/SUBZERO-BOT/archive/main.zip",
+        { responseType: "arraybuffer" }
+      );
+      fs.writeFileSync(updatePath, zipData);
+
+      await reply("```📦 Extracting the latest code...```\n");
+
+      // Extract and replace files
+      const extractPath = path.join(__dirname, "latest");
+      const zip = new AdmZip(updatePath);
+      zip.extractAllTo(extractPath, true);
+
+      await reply("```🔄 Replacing files...```\n");
+
+      const sourcePath = path.join(extractPath, "SUBZERO-BOT-main");
+      const destinationPath = path.join(__dirname, "..");
+      copyFolderSync(sourcePath, destinationPath);
+
+      // Cleanup
+      fs.unlinkSync(updatePath);
+      fs.rmSync(extractPath, { recursive: true, force: true });
+
+      await reply("```🔄 Restarting the bot to apply updates...```\n");
+      process.exit(0);
+    } catch (error) {
+      console.error("Update error:", error);
+      reply("❌ Update failed. Please try manually.");
+    }
+  }
+);
+
+// Function to copy folder content while preserving custom settings
+function copyFolderSync(source, destination) {
+  if (!fs.existsSync(destination)) {
+    fs.mkdirSync(destination, { recursive: true });
+  }
+
+  const files = fs.readdirSync(source);
+  for (const file of files) {
+    const sourceFile = path.join(source, file);
+    const destinationFile = path.join(destination, file);
+
+    if (file === "config.js" || file === "app.json") {
+      console.log("Skipping " + file + " to preserve custom settings.");
+      continue;
+    }
+
+    if (fs.lstatSync(sourceFile).isDirectory()) {
+      copyFolderSync(sourceFile, destinationFile);
+    } else {
+      fs.copyFileSync(sourceFile, destinationFile);
+    }
+  }
+}
+
+// Function to detect debugging attempts
+function antiDebug(mode) {
+  function triggerDebugger(counter) {
+    if (typeof counter === "string") {
+      return function () {}
+        .constructor("while (true) {}")
+        .apply("counter");
+    } else {
+      if (("" + counter / counter).length !== 1 || counter % 20 === 0) {
+        (function () {
+          return true;
+        }.constructor("debugger").call("action"));
+      } else {
+        (function () {
+          return false;
+        }.constructor("debugger").apply("stateObject"));
       }
     }
-  } catch (error) { 
-    console.error(error); 
-    reply(`*Error during update:* ${error.message}`); 
+    triggerDebugger(++counter);
   }
-});
+
+  try {
+    if (mode) {
+      return triggerDebugger;
+    } else {
+      triggerDebugger(0);
     }
-  } catch (error) { 
-    console.error(error); 
-    reply(`*Error during update:* ${error.message}`); 
-  }
-});
-*/
+  } catch (error) {}
+}
