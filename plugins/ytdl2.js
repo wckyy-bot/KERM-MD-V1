@@ -87,7 +87,7 @@ function convertYouTubeLink(link) {
 }
 
 cmd({
-  'pattern': "play",
+  'pattern': "song1",
   'desc': "To download songs.",
   'react': '☃️',
   'category': "download",
