@@ -17,6 +17,7 @@ const { cmd } = require("../command");
 // Command: bible
 cmd({
     pattern: "bible",
+    alias: ["god"],
     desc: "Fetch Bible verses by reference.",
     category: "fun",
     react: "📖",
