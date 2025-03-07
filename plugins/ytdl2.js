@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core');
+const axios = require('axios');
 const yts = require("yt-search");
 const { cmd } = require("../command");
 
@@ -11,6 +11,52 @@ function extractYouTubeId(url) {
 function convertYouTubeLink(link) {
     const id = extractYouTubeId(link);
     return id ? "https://www.youtube.com/watch?v=" + id : link;
+}
+
+async function getAudioUrl(videoUrl, format) {
+    try {
+        const response = await axios.get('https://loader.to/ajax/download.php', {
+            params: {
+                button: 1,
+                start: 1,
+                end: 1,
+                format: format,
+                url: videoUrl
+            },
+            headers: {
+                'Accept': '*/*',
+                'Accept-Encoding': "gzip, deflate, br",
+                'Accept-Language': "en-GB,en-US;q=0.9,en;q=0.8",
+                'Origin': 'https://loader.to',
+                'Referer': "https://loader.to",
+                'User-Agent': "Mozilla/5.0"
+            }
+        });
+        const downloadId = response.data.id;
+
+        while (true) {
+            const progressResponse = await axios.get("https://loader.to/ajax/progress.php", {
+                params: { id: downloadId },
+                headers: {
+                    'Accept': '*/*',
+                    'Accept-Encoding': "gzip, deflate, br",
+                    'Accept-Language': "en-GB,en-US;q=0.9,en;q=0.8",
+                    'Origin': 'https://loader.to',
+                    'Referer': "https://loader.to",
+                    'User-Agent': "Mozilla/5.0"
+                }
+            });
+
+            const { progress, download_url, text } = progressResponse.data;
+            if (text === "Finished") {
+                return download_url;
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'obtention de l'URL de l'audio :", error);
+        throw new Error("Failed to obtain audio URL.");
+    }
 }
 
 cmd({
@@ -55,10 +101,8 @@ cmd({
                 await conn.sendMessage(remoteJid, { react: { text: '⬇️', key: message.key } });
 
                 try {
-                    console.log("Obtention des informations de téléchargement pour :", videoUrl);
-                    const downloadInfo = await ytdl.getInfo(videoUrl);
-                    const audioFormats = ytdl.filterFormats(downloadInfo.formats, 'audioonly');
-                    const audioUrl = audioFormats[0].url;
+                    console.log("Obtention de l'URL de l'audio pour :", videoUrl);
+                    const audioUrl = await getAudioUrl(videoUrl, 140); // 140 est le format pour l'audio
 
                     console.log("URL de l'audio obtenue :", audioUrl);
                     if (!audioUrl) {
@@ -100,7 +144,7 @@ cmd({
                         console.log("Texte inattendu reçu :", text);
                     }
                 } catch (err) {
-                    console.error("Erreur lors de l'obtention des informations de téléchargement :", err);
+                    console.error("Erreur lors de l'obtention de l'URL de l'audio :", err);
                     reply("Failed to download the audio. Please try again later.");
                 }
             }
