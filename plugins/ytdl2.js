@@ -22,11 +22,17 @@ cmd({
 }, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         if (!q) {
+            console.log("Aucun URL ou titre fourni.");
             return reply("Please provide a URL or title.");
         }
         q = convertYouTubeLink(q);
+        console.log("Recherche de la vidéo YouTube pour :", q);
         const searchResults = await yts(q);
         const video = searchResults.videos[0];
+        if (!video) {
+            console.log("Aucune vidéo trouvée.");
+            return reply("No video found for the provided URL or title.");
+        }
         const videoUrl = video.url;
         const message = await conn.sendMessage(from, {
             image: { url: video.thumbnail },
@@ -43,45 +49,57 @@ cmd({
             const isReplyToBot = message.message.extendedTextMessage && message.message.extendedTextMessage.contextInfo.stanzaId === messageId;
 
             if (isReplyToBot) {
+                console.log("Réponse reçue : ", text);
                 await conn.sendMessage(remoteJid, { react: { text: '⬇️', key: message.key } });
 
-                const downloadInfo = await ytdl.getInfo(videoUrl);
-                const audioFormats = ytdl.filterFormats(downloadInfo.formats, 'audioonly');
-                const audioUrl = audioFormats[0].url;
+                try {
+                    console.log("Obtention des informations de téléchargement pour :", videoUrl);
+                    const downloadInfo = await ytdl.getInfo(videoUrl);
+                    const audioFormats = ytdl.filterFormats(downloadInfo.formats, 'audioonly');
+                    const audioUrl = audioFormats[0].url;
 
-                await conn.sendMessage(remoteJid, { delete: message.key });
-                await conn.sendMessage(remoteJid, { react: { text: '⬆️', key: message.key } });
+                    console.log("URL de l'audio obtenue :", audioUrl);
+                    await conn.sendMessage(remoteJid, { delete: message.key });
+                    await conn.sendMessage(remoteJid, { react: { text: '⬆️', key: message.key } });
 
-                if (text === '1') {
-                    await conn.sendMessage(remoteJid, {
-                        audio: { url: audioUrl },
-                        mimetype: "audio/mpeg",
-                        contextInfo: {
-                            externalAdReply: {
-                                title: video.title,
-                                body: video.videoId,
-                                mediaType: 1,
-                                sourceUrl: video.url,
-                                thumbnailUrl: video.thumbnail,
-                                renderLargerThumbnail: true,
-                                showAdAttribution: true
+                    if (text === '1') {
+                        console.log("Envoi de l'audio.");
+                        await conn.sendMessage(remoteJid, {
+                            audio: { url: audioUrl },
+                            mimetype: "audio/mpeg",
+                            contextInfo: {
+                                externalAdReply: {
+                                    title: video.title,
+                                    body: video.videoId,
+                                    mediaType: 1,
+                                    sourceUrl: video.url,
+                                    thumbnailUrl: video.thumbnail,
+                                    renderLargerThumbnail: true,
+                                    showAdAttribution: true
+                                }
                             }
-                        }
-                    }, { quoted: message });
-                    await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
-                } else if (text === '2') {
-                    await conn.sendMessage(remoteJid, {
-                        document: { url: audioUrl },
-                        mimetype: "audio/mpeg",
-                        fileName: `${video.title}.mp3`,
-                        caption: "\n> *© Generated for you by KERM-MD-V1 ❤️*\n"
-                    }, { quoted: message });
-                    await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                        }, { quoted: message });
+                        await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                    } else if (text === '2') {
+                        console.log("Envoi du fichier audio.");
+                        await conn.sendMessage(remoteJid, {
+                            document: { url: audioUrl },
+                            mimetype: "audio/mpeg",
+                            fileName: `${video.title}.mp3`,
+                            caption: "\n> *© Generated for you by KERM-MD-V1 ❤️*\n"
+                        }, { quoted: message });
+                        await conn.sendMessage(remoteJid, { react: { text: '✅', key: message.key } });
+                    } else {
+                        console.log("Texte inattendu reçu :", text);
+                    }
+                } catch (err) {
+                    console.error("Erreur lors de l'obtention des informations de téléchargement :", err);
+                    reply("Failed to download the audio. Please try again later.");
                 }
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur dans la commande play4 :", error);
         reply('' + error);
     }
 });
