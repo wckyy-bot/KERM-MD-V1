@@ -16,6 +16,7 @@ const config = require('../config');
 const { cmd, commands } = require('../command');
 cmd({
     pattern: "weather",
+    alias: ["meteo"],
     desc: "🌤 Get weather information for a location",
     react: "🌤",
     category: "other",
