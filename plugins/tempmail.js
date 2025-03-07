@@ -1,100 +1,97 @@
-const axios = require("axios");
-const { cmd } = require("../command");
+const axios = require('axios');
+const { cmd } = require('../command');
 
-// Global variable to store the temporary email address
-let tempMail = null;
+const BASE_URL = 'https://www.guerrillamail.com/ajax.php';
+let userSessions = {};
 
-/**
- * Command: .tempmail
- * Description: Generates a temporary email address using the GetNada API.
- * Usage: .tempmail
- */
-cmd({
-    pattern: "tempmail",
-    desc: "Generate a temporary email address.",
-    category: "fun",
-    react: "📧",
+// Commande .tempmail
+cmd(
+  {
+    pattern: 'tempmail',
+    react: '📧',
+    alias: ['tm', 'mailtemp'],
+    desc: 'Générer et consulter des e-mails temporaires.',
+    category: 'utility',
+    use: '.tempmail [new | inbox | read <ID>]',
     filename: __filename,
-    use: ".tempmail"
-}, async (conn, mek, m, { reply }) => {
+  },
+  async (bot, message, senderInfo, { from, args, reply }) => {
     try {
-        // Fetch the list of available domains from the GetNada API
-        const domainResponse = await axios.get("https://getnada.com/api/v1/domains");
-        const domains = domainResponse.data.domains; // Example: ["getnada.com", "abyssmail.com", ...]
-        if (!domains || domains.length === 0) {
-            return reply("❌ Failed to retrieve available domains.");
-        }
-        // Choose a random domain from the list
-        const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-        // Generate a random string for the local-part of the email address
-        const localPart = Math.random().toString(36).substring(2, 12);
-        // Compose the temporary email address
-        tempMail = `${localPart}@${randomDomain}`;
-        return reply(`✅ Your temporary email address is:\n\n*${tempMail}*`);
-    } catch (error) {
-        console.error("Error in tempmail command:", error);
-        return reply(`❌ An error occurred: ${error.message}`);
-    }
-});
+      const action = args[0] ? args[0].toLowerCase() : 'new';
 
-/**
- * Command: .checkmail
- * Description: Checks the messages received for the temporary email address.
- * Usage: .checkmail
- */
-cmd({
-    pattern: "checkmail",
-    desc: "Check messages for your temporary email address.",
-    category: "fun",
-    react: "📬",
-    filename: __filename,
-    use: ".checkmail"
-}, async (conn, mek, m, { reply }) => {
-    try {
-        if (!tempMail) {
-            return reply("❌ No temporary email address is set. Use .tempmail to generate one.");
-        }
-        // Construct the API URL to retrieve messages using GetNada
-        const apiUrl = `https://getnada.com/api/v1/inboxes/${tempMail}`;
-        const response = await axios.get(apiUrl);
-        const messages = response.data.msgs; // The API returns an array of messages in the "msgs" property
-        if (!messages || messages.length === 0) {
-            return reply(`📭 No messages have been received for *${tempMail}* yet.`);
-        }
-        let messageList = `📬 Messages for *${tempMail}*:\n`;
-        messages.forEach((msg) => {
-            // Display basic info for each message: ID, from, subject, and date
-            messageList += `• ID: ${msg.uid} | From: ${msg.f} | Subject: ${msg.s} | Date: ${msg.d}\n`;
+      // Générer un nouvel e-mail temporaire
+      if (action === 'new') {
+        const response = await axios.get(`${BASE_URL}?f=get_email_address`, {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
         });
-        return reply(messageList);
-    } catch (error) {
-        console.error("Error in checkmail command:", error);
-        return reply(`❌ An error occurred: ${error.message}`);
-    }
-});
 
-/**
- * Command: .delmail
- * Description: Deletes the temporary email address and clears its messages.
- * Usage: .delmail
- */
-cmd({
-    pattern: "delmail",
-    desc: "Delete the temporary email address and its messages.",
-    category: "fun",
-    react: "🗑️",
-    filename: __filename,
-    use: ".delmail"
-}, async (conn, mek, m, { reply }) => {
-    try {
-        if (!tempMail) {
-            return reply("❌ No temporary email address is set.");
+        const { email_addr, sid_token } = response.data;
+        userSessions[from] = { email: email_addr, sid_token };
+
+        const replyText = `📩 *Votre e-mail temporaire :* ${email_addr}\n\nUtilisez .tempmail inbox pour voir les e-mails reçus.`;
+
+        await bot.sendMessage(from, { text: replyText }, { quoted: message });
+        return;
+      }
+
+      // Vérifier si l'utilisateur a une session active
+      if (!userSessions[from]) {
+        return reply("❌ Vous n'avez pas d'e-mail temporaire actif. Utilisez `.tempmail new` pour en générer un.");
+      }
+
+      const { email, sid_token } = userSessions[from];
+
+      // Vérifier la boîte de réception
+      if (action === 'inbox') {
+        const response = await axios.get(`${BASE_URL}?f=get_email_list&sid_token=${sid_token}&offset=0`, {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+        });
+
+        const emails = response.data.list;
+
+        if (!emails || emails.length === 0) {
+          return reply('📭 Aucun e-mail reçu dans votre boîte temporaire.');
         }
-        // Reset the temporary email address (the API auto-deletes messages after a period)
-        tempMail = null;
-        return reply("✅ The temporary email address and its messages have been cleared.");
+
+        let inboxText = '📬 *Messages reçus :*\n\n';
+        emails.forEach(email => {
+          inboxText += `🔢 ID : ${email.mail_id}\n📧 De : ${email.mail_from}\n📌 Sujet : ${email.mail_subject}\n\n`;
+        });
+
+        inboxText += 'Utilisez `.tempmail read <ID>` pour lire un e-mail.';
+        await bot.sendMessage(from, { text: inboxText }, { quoted: message });
+        return;
+      }
+
+      // Lire un e-mail spécifique
+      if (action === 'read') {
+        const emailID = args[1];
+        if (!emailID) {
+          return reply("❌ Fournissez un ID d'e-mail. Exemple : `.tempmail read 12345`");
+        }
+
+        const response = await axios.get(`${BASE_URL}?f=fetch_email&sid_token=${sid_token}&email_id=${emailID}`, {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+        });
+
+        const emailData = response.data;
+
+        if (!emailData || !emailData.mail_subject) {
+          return reply("❌ ID d'e-mail invalide ou e-mail inexistant.");
+        }
+
+        const emailText = `📧 *De :* ${emailData.mail_from}\n📌 *Sujet :* ${emailData.mail_subject}\n📩 *Message :*\n${emailData.mail_body}`;
+
+        await bot.sendMessage(from, { text: emailText }, { quoted: message });
+        return;
+      }
+
+      // Option invalide
+      return reply("❌ Option invalide. Utilisez `.tempmail new`, `.tempmail inbox`, ou `.tempmail read <ID>`");
+      
     } catch (error) {
-        console.error("Error in delmail command:", error);
-        return reply(`❌ An error occurred: ${error.message}`);
+      console.error('Erreur avec temp mail:', error);
+      reply('❌ Échec du traitement. Réessayez plus tard.');
     }
-});
+  }
+);
