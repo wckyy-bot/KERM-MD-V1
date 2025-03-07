@@ -15,6 +15,7 @@
         "@blackamda/song_video_dl": "1.1.0",
         "@blackamda/telegram-image-url": "^1.0.0",
         "@bochilteam/scraper": "4.2.4",
+        "ytdl-core": "^4.9.1",
         "@bochilteam/scraper-sosmed": "1.0.5",
         "@danitech/scraper": "1.0.7",
         "@ffmpeg-installer/ffmpeg": "^1.1.0",
