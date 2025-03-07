@@ -18,7 +18,7 @@ const path = require("path"); // Gestion des chemins de fichiers
 cmd({
   pattern: "delete",
   react: "🗑️",
-  alias: ["del"],
+  alias: ["del", "dlt"],
   desc: "Delete the bot's messages or other messages (requires admin for others).",
   category: "group",
   use: '.del',
