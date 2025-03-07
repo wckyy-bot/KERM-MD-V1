@@ -10,7 +10,7 @@ CONTACT ME HERE +237656520674
 YT: KermHackTools
 Github: Kgtech-cmr
 */
-
+/*
 const {
   cmd,
   commands
@@ -34,7 +34,7 @@ async function ytmp4(_0x32b019, _0x339734) {
       'url': _0x32b019
     };
     const _0x5a1205 = {
-      'Accept': '*/*',
+      'Accept': '*',
       'Accept-Encoding': "gzip, deflate, br",
       'Accept-Language': "en-GB,en-US;q=0.9,en;q=0.8",
       'Origin': 'https://loader.to',
