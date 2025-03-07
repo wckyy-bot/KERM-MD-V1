@@ -28,7 +28,7 @@ cmd(
         const { email_addr, sid_token } = response.data;
         userSessions[from] = { email: email_addr, sid_token };
 
-        const replyText = `📩 *Votre e-mail temporaire :* ${email_addr}\n\nUtilisez .tempmail inbox pour voir les e-mails reçus.`;
+        const replyText = `📩 *Your temporary email :* ${email_addr}\n\nUse .tempmail inbox to see emails received.`;
 
         await bot.sendMessage(from, { text: replyText }, { quoted: message });
         return;
@@ -36,7 +36,7 @@ cmd(
 
       // Vérifier si l'utilisateur a une session active
       if (!userSessions[from]) {
-        return reply("❌ Vous n'avez pas d'e-mail temporaire actif. Utilisez `.tempmail new` pour en générer un.");
+        return reply("❌ You do not have an active temporary email. Use `.tempmail new` to generate one.");
       }
 
       const { email, sid_token } = userSessions[from];
@@ -50,15 +50,15 @@ cmd(
         const emails = response.data.list;
 
         if (!emails || emails.length === 0) {
-          return reply('📭 Aucun e-mail reçu dans votre boîte temporaire.');
+          return reply('📭 No email received in your temporary mailbox.');
         }
 
         let inboxText = '📬 *Messages reçus :*\n\n';
         emails.forEach(email => {
-          inboxText += `🔢 ID : ${email.mail_id}\n📧 De : ${email.mail_from}\n📌 Sujet : ${email.mail_subject}\n\n`;
+          inboxText += `🔢 ID : ${email.mail_id}\n📧 Of : ${email.mail_from}\n📌 Subject : ${email.mail_subject}\n\n`;
         });
 
-        inboxText += 'Utilisez `.tempmail read <ID>` pour lire un e-mail.';
+        inboxText += 'Use `.tempmail read <ID>` to read an email.';
         await bot.sendMessage(from, { text: inboxText }, { quoted: message });
         return;
       }
@@ -67,7 +67,7 @@ cmd(
       if (action === 'read') {
         const emailID = args[1];
         if (!emailID) {
-          return reply("❌ Fournissez un ID d'e-mail. Exemple : `.tempmail read 12345`");
+          return reply("❌ Provide an email ID. Example: `.tempmail read 12345`");
         }
 
         const response = await axios.get(`${BASE_URL}?f=fetch_email&sid_token=${sid_token}&email_id=${emailID}`, {
@@ -77,7 +77,7 @@ cmd(
         const emailData = response.data;
 
         if (!emailData || !emailData.mail_subject) {
-          return reply("❌ ID d'e-mail invalide ou e-mail inexistant.");
+          return reply("❌ Invalid email ID or non-existent email.");
         }
 
         const emailText = `📧 *De :* ${emailData.mail_from}\n📌 *Sujet :* ${emailData.mail_subject}\n📩 *Message :*\n${emailData.mail_body}`;
@@ -87,11 +87,11 @@ cmd(
       }
 
       // Option invalide
-      return reply("❌ Option invalide. Utilisez `.tempmail new`, `.tempmail inbox`, ou `.tempmail read <ID>`");
+      return reply("❌ Invalid option. Use `.tempmail new`, `.tempmail inbox`, or `.tempmail read <ID>`");
       
     } catch (error) {
-      console.error('Erreur avec temp mail:', error);
-      reply('❌ Échec du traitement. Réessayez plus tard.');
+      console.error('Error with temp mail:', error);
+      reply('❌ Treatment is a Failure. Try again later.');
     }
   }
 );
