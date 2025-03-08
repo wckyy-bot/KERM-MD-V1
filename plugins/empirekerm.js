@@ -35,6 +35,7 @@ cmd({
       *│  ◦* *▢➠ RYAN*
       *│  ◦* *▢➠ CHRIS*
       *│  ◦* *▢➠ GREY*
+      *│  ◦* *▢➠ ISAAC*
       *│  ◦* *▢➠ SUKUNA*
       *│  ◦* *▢➠ ROY*
       *│  ◦* *▢➠ FERNAND*
