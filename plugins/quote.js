@@ -23,11 +23,11 @@ cmd({
 },
 async (conn, mek, m, { from, reply }) => {
     try {
-        const response = await axios.get('https://zenquotes.io/api/random');
+        const response = await axios.get('https://favqs.com/api/qotd');
         const quote = response.data;
         const message = `
-💬 "${quote.q}"\n
-- ${quote.a}
+💬 "${quote.body}"\n
+- ${quote.author}
 *QUOTES BY KG TECH*
         `;
         return reply(message);
