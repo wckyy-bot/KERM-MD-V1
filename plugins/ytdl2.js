@@ -115,7 +115,7 @@ const yt = await ytsearch(q);
     // Send document file
     await conn.sendMessage(from, { 
         document: { url: data.result.downloadUrl }, 
-        mimetype: "audio/mpeg", 
+        mimetype: "audio/mp3", 
         fileName: `${data.result.title}.mp3`, 
         caption: `> *© 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 ʙʏ 𝐊𝐞𝐫𝐦 𝐦𝐝🎐*`
     }, { quoted: mek });
