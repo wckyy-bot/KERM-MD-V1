@@ -110,7 +110,7 @@ const yt = await ytsearch(q);
     await conn.sendMessage(from, { image: { url: data.result.image || '' }, caption: ytmsg }, { quoted: mek });
     
     // Send audio file
-    await conn.sendMessage(from, { audio: { url: data.result.downloadUrl }, mimetype: "audio/mpeg" }, { quoted: mek });
+    await conn.sendMessage(from, { audio: { url: data.result.downloadUrl }, mimetype: "audio/mp3" }, { quoted: mek });
     
     // Send document file
     await conn.sendMessage(from, { 
