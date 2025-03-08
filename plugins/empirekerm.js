@@ -18,6 +18,7 @@ cmd({
       *│  ◦* *▢➠ GAMALIEL*
       *│  ◦* *▢➠ FRANCK*
       *│  ◦* *▢➠ HENRY*
+      *│  ◦* *▢➠ YAN ZE LEGENDE*
       *│  ◦* *▢➠ LEA*
       *│  ◦* *▢➠ MARILYN*
       *│  ◦* *▢➠ EMIE*
