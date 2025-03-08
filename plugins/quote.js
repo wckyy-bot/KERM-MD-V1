@@ -26,8 +26,8 @@ async (conn, mek, m, { from, reply }) => {
         const response = await axios.get('https://zenquotes.io/api/random');
         const quote = response.data;
         const message = `
-💬 "${quote.content}"
-- ${quote.author}
+💬 "${quote.q}"\n
+- ${quote.a}
 *QUOTES BY KG TECH*
         `;
         return reply(message);
