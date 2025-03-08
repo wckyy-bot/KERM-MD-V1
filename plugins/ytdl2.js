@@ -110,12 +110,12 @@ const yt = await ytsearch(q);
     await conn.sendMessage(from, { image: { url: data.result.image || '' }, caption: ytmsg }, { quoted: mek });
     
     // Send audio file
-    await conn.sendMessage(from, { audio: { url: data.result.downloadUrl }, mimetype: "audio/mp3" }, { quoted: mek });
+    await conn.sendMessage(from, { audio: { url: data.result.downloadUrl }, mimetype: "audio/mpeg" }, { quoted: mek });
     
     // Send document file
     await conn.sendMessage(from, { 
         document: { url: data.result.downloadUrl }, 
-        mimetype: "audio/mp3", 
+        mimetype: "audio/mpeg", 
         fileName: `${data.result.title}.mp3`, 
         caption: `> *© 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 ʙʏ 𝐊𝐞𝐫𝐦 𝐦𝐝🎐*`
     }, { quoted: mek });
