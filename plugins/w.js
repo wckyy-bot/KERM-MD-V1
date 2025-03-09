@@ -12,7 +12,7 @@ cmd({ pattern: "music2", alias: ["audio", "song"], desc: "Search and download au
             videoUrl = searchResults.videos[0].url;
         }
 
-        const apiUrl = `https://api.ryzendesu.vip/api/downloader/ytmp3?url=${videoUrl}`;
+        const apiUrl = `https://apis.davidcyriltech.my.id/youtube/mp3?url=${videoUrl}`;
         console.log(`Fetching MP3 from URL: ${apiUrl}`);
         const response = await axios.get(apiUrl);
         if (!response.data || !response.data.success || !response.data.result.downloadUrl) {
