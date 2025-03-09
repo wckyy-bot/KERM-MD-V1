@@ -86,7 +86,11 @@ async function connectToWA() {
             const path = require('path');
             fs.readdirSync("./plugins/").forEach((plugin) => {
                 if (path.extname(plugin).toLowerCase() == ".js") {
-                    require("./plugins/" + plugin)(conn);
+                    const pluginPath = "./plugins/" + plugin;
+                    const pluginModule = require(pluginPath);
+                    if (typeof pluginModule === 'function') {
+                        pluginModule(conn);
+                    }
                 }
             });
             console.log('PLUGINS FILES INSTALL SUCCESSFULLY ✅')
