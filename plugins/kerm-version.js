@@ -12,83 +12,95 @@ Github: Kgtech-cmr
 */
 
 const axios = require('axios');
-const config = require('../config');
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const { cmd, commands } = require('../command');
-const { fetchJson } = require('../lib/functions');
-
-
+const { runtime } = require('../lib/functions');
 
 cmd({
   pattern: 'version',
-  react: '✔️',
-  desc: 'Check the bot\'s version',
+  alias: ["changelog", "cupdate", "checkupdate"],
+  react: '🚀',
+  desc: "Check bot's version, system stats, and update info.",
   category: 'info',
   filename: __filename
 }, async (conn, mek, m, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
+  from, sender, pushname, reply
 }) => {
   try {
-    const packageName = require('../package.json');
-    const currentVersion = packageName.version;
-
-    const apiUrl = 'https://raw.githubusercontent.com/Kgtech-cmr/KERM-MD-V1/master/package.json';
-    const response = await axios.get(apiUrl);
-    const data = response.data;
-    const latestVersion = data.version;
-
-    let message = '';
-    if (currentVersion === latestVersion) {
-      message = `Kerm Md bot is up-to-date! 😊\n Current version is: ${currentVersion}`;
-    } else {
-      message = `Kerm Md bot is outdated 😵!\n\n  Current version: ${currentVersion} \n Latest version: ${latestVersion}`;
+    // Read local version data
+    const localVersionPath = path.join(__dirname, '../DATABASE/version.json');
+    let localVersion = 'Unknown';
+    let changelog = 'No changelog available.';
+    if (fs.existsSync(localVersionPath)) {
+      const localData = JSON.parse(fs.readFileSync(localVersionPath));
+      localVersion = localData.version;
+      changelog = localData.changelog;
     }
 
-   // await reply(message);
-    
- // } catch (error) {
-  //  console.error('Error fetching version:', error);
-   // await reply('Error fetching version. Please try again later.');
-//  }
-//});
-       // Send the status message with an image
-        await conn.sendMessage(from, { 
-            image: { url: `https://files.catbox.moe/heu4tc.png` },  // Image URL
-            caption: message,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363321386877609@newsletter',
-                    newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃',
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek });
-
-    } catch (e) {
-        console.error("Error in Subzero checking Version:", e);
-        reply(`An error Occured Fetching Version 😕`);
+    // Fetch latest version data from GitHub
+    const rawVersionUrl = 'https://raw.githubusercontent.com/Kgtech-cmr/KERM-MD-V1/main/DATABASE/version.json';
+    let latestVersion = 'Unknown';
+    let latestChangelog = 'No changelog available.';
+    try {
+      const { data } = await axios.get(rawVersionUrl);
+      latestVersion = data.version;
+      latestChangelog = data.changelog;
+    } catch (error) {
+      console.error('Failed to fetch latest version:', error);
     }
+
+    // Count total plugins
+    const pluginPath = path.join(__dirname, '../plugins');
+    const pluginCount = fs.readdirSync(pluginPath).filter(file => file.endsWith('.js')).length;
+
+    // Count total registered commands
+    const totalCommands = commands.length;
+
+    // System info
+    const uptime = runtime(process.uptime());
+    const ramUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+    const totalRam = (os.totalmem() / 1024 / 1024).toFixed(2);
+    const hostName = os.hostname();
+    const lastUpdate = fs.statSync(localVersionPath).mtime.toLocaleString();
+
+    // GitHub stats
+    const githubRepo = 'https://github.com/Kgtech-cmr/KERM-MD-V1';
+
+    // Check update status
+    let updateMessage = `*✅ 𝖸𝖮𝖴 𝖪𝖤𝖱𝖬－𝖬𝖣－𝖵𝟣 𝖡𝖮𝖸 𝖨𝖲 𝖴𝖯-𝖳𝖮-𝖣𝖠𝖳𝖤!*`;
+    if (localVersion !== latestVersion) {
+      updateMessage = `*😵‍💫 𝖸𝖮𝖴𝖱 𝖪𝖤𝖱𝖬－𝖬𝖣－𝖵𝟣 𝖨𝖲 𝖮𝖴𝖳𝖣𝖠𝖳𝖤𝖣*
+🔹 *ᴄᴜʀʀᴇɴᴛ ᴠᴇʀsɪᴏɴ:* ${localVersion}
+🔹 *ʟᴀᴛᴇsᴛ ᴠᴇʀsɪᴏɴ:* ${latestVersion}
+
+*ᴜsᴇ .ᴜᴘᴅᴀᴛᴇ ᴛᴏ ᴜᴘᴅᴀᴛᴇ.*`;
+    }
+
+    const statusMessage = `🌟 *Good ${new Date().getHours() < 12 ? 'Morning' : 'Night'}, ${pushname}!* 🌟\n\n` +
+      `🤖 *ʙᴏᴛ ɴᴀᴍᴇ:* ᴀʟɪ-ᴍᴅ\n🔖 *ᴄᴜʀʀᴇɴᴛ ᴠᴇʀsɪᴏɴ:* ${localVersion}\n📢 *ʟᴀᴛᴇsᴛ ᴠᴇʀsɪᴏɴ:* ${latestVersion}\n📂 *ᴛᴏᴛᴀʟ ᴘʟᴜɢɪɴs:* ${pluginCount}\n🔢 *ᴛᴏᴛᴀʟ ᴄᴏᴍᴍᴀɴᴅs:* ${totalCommands}\n\n` +
+      `💾 *sʏsᴛᴇᴍ ɪɴғᴏ:*\n⏰ *ᴜᴘᴛɪᴍᴇ:* ${uptime}\n📟 *ʀᴀᴍ ᴜsᴀɢᴇ:* ${ramUsage}MB / ${totalRam}MB\n⚙️ *ʜᴏsᴛ ɴᴀᴍᴇ:* ${hostName}\n📅 *ʟᴀsᴛ ᴜᴘᴅᴀᴛᴇ:* ${lastUpdate}\n\n` +
+      `📑 *ᴄʜᴀɴɢᴇʟᴏɢ:*\n${latestChangelog}\n\n` +
+      `⭐ *ɢɪᴛʜᴜʙ ʀᴇᴘᴏ:* ${githubRepo}\n\n${updateMessage}\n\n👋🏻 *ʜᴇʏ! ᴅᴏɴ'ᴛ ғᴏʀɢᴇᴛ ᴛᴏ ғᴏʀᴋ & sᴛᴀʀ ᴛʜᴇ ʀᴇᴘᴏ!*`;
+
+    // Send the status message with an image
+    await conn.sendMessage(from, {
+      image: { url: 'https://files.catbox.moe/heu4tc.png' },
+      caption: statusMessage,
+      contextInfo: {
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363321386877609@newsletter',
+          newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃 𝐕𝐄𝐑𝐒𝐈𝐎𝐍',
+          serverMessageId: 143
+        }
+      }
+    }, { quoted: mek });
+  } catch (error) {
+    console.error('Error fetching version info:', error);
+    reply('❌ An error occurred while checking the bot version.');
+  }
 });
