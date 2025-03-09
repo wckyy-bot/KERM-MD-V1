@@ -26,8 +26,6 @@ const l = console.log
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require('./lib/functions')
 const fs = require('fs')
 const ff = require('fluent-ffmpeg')
-const banUnban = require('./plugins/banUnban');
-banUnban(conn);
 const P = require('pino')
 const config = require('./config')
 const rankCommand = require('./plugins/rank')
