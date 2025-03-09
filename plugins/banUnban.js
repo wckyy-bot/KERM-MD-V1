@@ -1,67 +1,101 @@
-const { cmd } = require("../command");
 const fs = require('fs');
 const path = require('path');
+const { cmd } = require('../command');
 
-// Path to the JSON file
-const bannedNumbersFilePath = path.resolve(__dirname, '../lib/bannedNumbers.json');
+// Chemin du fichier de stockage des numéros bannis
+const bannedFilePath = path.join(__dirname, 'banned.json');
 
-// Helper functions to read and write to the JSON file
-const readBannedNumbers = () => {
-    const data = fs.readFileSync(bannedNumbersFilePath);
+// Fonction pour charger la liste bannie
+function loadBannedList() {
+  if (!fs.existsSync(bannedFilePath)) {
+    fs.writeFileSync(bannedFilePath, JSON.stringify([]));
+    return [];
+  }
+  try {
+    const data = fs.readFileSync(bannedFilePath, 'utf-8');
     return JSON.parse(data);
-};
+  } catch (err) {
+    console.error("Error reading banned list:", err);
+    return [];
+  }
+}
 
-const writeBannedNumbers = (numbers) => {
-    fs.writeFileSync(bannedNumbersFilePath, JSON.stringify({ bannedNumbers: numbers }, null, 2));
-};
+// Fonction pour sauvegarder la liste bannie
+function saveBannedList(list) {
+  fs.writeFileSync(bannedFilePath, JSON.stringify(list, null, 2));
+}
 
-// Check if the user is an admin or the owner
-const isAdminOrOwner = async (conn, groupId, userId) => {
-    const groupMetadata = await conn.groupMetadata(groupId);
-    const groupAdmins = groupMetadata.participants.filter(participant => participant.admin !== null).map(admin => admin.id);
-    const botOwner = conn.user.jid;
-    return groupAdmins.includes(userId) || botOwner === userId;
-};
+/* COMMANDE BAN
+   Permet de bannir définitivement un utilisateur du groupe.
+   Usage : répondre à un message ou fournir un numéro.
+*/
+cmd({
+  pattern: "ban",
+  desc: "Ban a user permanently from the group (admin/owner only).",
+  category: "admin",
+  filename: __filename,
+}, async (conn, mek, m, { from, isGroup, isAdmins, isOwner, reply }) => {
+  try {
+    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
 
-// Command to ban a user
-cmd({ pattern: "ban", desc: "Ban a user from the group", category: "admin", react: "⛔", filename: __filename }, async (conn, mek, m, { from, args, q, reply, sender }) => {
-    if (!await isAdminOrOwner(conn, from, sender)) return reply("You don't have permission to use this command.");
-    if (!q) return reply("Please provide a number to ban.");
-    let bannedNumbers = readBannedNumbers().bannedNumbers;
-    if (!bannedNumbers.includes(q)) {
-        bannedNumbers.push(q);
-        writeBannedNumbers(bannedNumbers);
-        reply(`User ${q} has been banned.`);
+    // Détermination de la cible : soit via une réponse, soit par argument
+    let target;
+    if (m.quoted) {
+      target = m.quoted.sender;
     } else {
-        reply(`User ${q} is already banned.`);
+      let num = m.text.split(" ")[1];
+      if (!num) return reply("❌ Please mention or provide a number to ban.");
+      target = num.includes('@') ? num : num + "@s.whatsapp.net";
     }
+    if (!target) return reply("❌ Unable to determine the target user.");
+
+    // Charger la liste bannie et ajouter le numéro si ce n'est pas déjà fait
+    let bannedList = loadBannedList();
+    if (!bannedList.includes(target)) {
+      bannedList.push(target);
+      saveBannedList(bannedList);
+    }
+
+    // Retirer l'utilisateur du groupe
+    await conn.groupParticipantsUpdate(from, [target], "remove").catch(err => {
+      console.error(err);
+      return reply("❌ Failed to remove the user from the group.");
+    });
+    reply(`✅ User ${target} has been banned and removed from the group permanently.`);
+  } catch (error) {
+    reply(`❌ An error occurred: ${error}`);
+    console.error(error);
+  }
 });
 
-// Command to unban a user
-cmd({ pattern: "unban", desc: "Unban a user from the group", category: "admin", react: "✅", filename: __filename }, async (conn, mek, m, { from, args, q, reply, sender }) => {
-    if (!await isAdminOrOwner(conn, from, sender)) return reply("You don't have permission to use this command.");
-    if (!q) return reply("Please provide a number to unban.");
-    let bannedNumbers = readBannedNumbers().bannedNumbers;
-    if (bannedNumbers.includes(q)) {
-        bannedNumbers = bannedNumbers.filter(number => number !== q);
-        writeBannedNumbers(bannedNumbers);
-        reply(`User ${q} has been unbanned.`);
-    } else {
-        reply(`User ${q} is not banned.`);
-    }
-});
+/* COMMANDE UNBAN
+   Permet de débannir un utilisateur en retirant son numéro du fichier de stockage.
+   Usage : .unban <number>
+*/
+cmd({
+  pattern: "unban",
+  desc: "Unban a user from the group (admin/owner only).",
+  category: "admin",
+  filename: __filename,
+}, async (conn, mek, m, { from, isGroup, isAdmins, isOwner, reply }) => {
+  try {
+    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
 
-// Event listener for new participants
-conn.on('group-participants-update', async (update) => {
-    const { action, participants, id } = update;
-    if (action === 'add') {
-        let bannedNumbers = readBannedNumbers().bannedNumbers;
-        for (let participant of participants) {
-            const participantNumber = participant.split('@')[0];
-            if (bannedNumbers.includes(participantNumber)) {
-                await conn.groupRemove(id, [participant]);
-                console.log(`Removed banned user ${participant} from group ${id}.`);
-            }
-        }
+    let num = m.text.split(" ")[1];
+    if (!num) return reply("❌ Please provide a number to unban.");
+    let target = num.includes('@') ? num : num + "@s.whatsapp.net";
+
+    let bannedList = loadBannedList();
+    if (!bannedList.includes(target)) {
+      return reply(`❌ The user ${target} is not banned.`);
     }
+    bannedList = bannedList.filter(u => u !== target);
+    saveBannedList(bannedList);
+    reply(`✅ User ${target} has been unbanned.`);
+  } catch (error) {
+    reply(`❌ An error occurred: ${error}`);
+    console.error(error);
+  }
 });
