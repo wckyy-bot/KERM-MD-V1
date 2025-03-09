@@ -27,4 +27,3 @@ let videoUrl = q;
     reply("An error occurred while processing your request.");
 }
 
-});
