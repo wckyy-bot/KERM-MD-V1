@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to the JSON file
-const bannedNumbersFilePath = path.resolve(__dirname, '../bannedNumbers.json');
+const bannedNumbersFilePath = path.resolve(__dirname, '../lib/diary.json');
 
 // Helper functions to read and write to the JSON file
 const readBannedNumbers = () => {
