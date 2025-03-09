@@ -11,4 +11,33 @@ YT: KermHackTools
 Github: Kgtech-cmr
 */
 
-function _0x1357(_0x48738c,_0xb38d4f){const _0x417762=_0x4177();return _0x1357=function(_0x135762,_0x1d659a){_0x135762=_0x135762-0xc2;let _0x2ec972=_0x417762[_0x135762];return _0x2ec972;},_0x1357(_0x48738c,_0xb38d4f);}const _0x3c140c=_0x1357;(function(_0x459bb9,_0x40d979){const _0x34310a=_0x1357,_0x1dfa29=_0x459bb9();while(!![]){try{const _0xc8f43=parseInt(_0x34310a(0xe1))/0x1*(parseInt(_0x34310a(0xc7))/0x2)+parseInt(_0x34310a(0xcd))/0x3*(parseInt(_0x34310a(0xda))/0x4)+-parseInt(_0x34310a(0xcb))/0x5+-parseInt(_0x34310a(0xe4))/0x6+-parseInt(_0x34310a(0xc4))/0x7+-parseInt(_0x34310a(0xe2))/0x8+parseInt(_0x34310a(0xd7))/0x9;if(_0xc8f43===_0x40d979)break;else _0x1dfa29['push'](_0x1dfa29['shift']());}catch(_0x4d689b){_0x1dfa29['push'](_0x1dfa29['shift']());}}}(_0x4177,0x3bae6));const {cmd}=require(_0x3c140c(0xdd)),yts=require(_0x3c140c(0xd6)),axios=require(_0x3c140c(0xc6));function _0x4177(){const _0x3307=['youtube.com','data','error','result','url','yt-search','6817032NEVKRX','*_🎐\x20Your\x20song\x20is\x20downloading..._*','media','85664SHzXeJ','*𝐏ℓєα𝐬֟፝є\x20𝐏ʀ๏νιɖє\x20𝐀\x20𝐒๏ƞ͛g\x20𝐍αмє..*','Search\x20and\x20download\x20audio\x20from\x20YouTube','../command','An\x20error\x20occurred\x20while\x20processing\x20your\x20request.','\x0a🔗\x20*Link:*\x20','No\x20results\x20found\x20for\x20your\x20query.','115761lGENhO','953088LSpQhF','song','163710dpYTpg','https://apis.davidcyriltech.my.id/youtube/mp3?url=','length','includes','1269429cwZWrT','audio/mpeg','axios','2FcsWGf','audio','title','downloadUrl','2254495naMHSc','success','21NGgMIS','Failed\x20to\x20fetch\x20the\x20audio.\x20Try\x20again\x20later.','music','youtu.be'];_0x4177=function(){return _0x3307;};return _0x4177();}cmd({'pattern':_0x3c140c(0xcf),'alias':[_0x3c140c(0xc8),_0x3c140c(0xe3)],'desc':_0x3c140c(0xdc),'category':_0x3c140c(0xd9),'react':'🎧','filename':__filename},async(_0x389833,_0x3bc79f,_0x4c323f,{from:_0x2e6b0f,args:_0x513b41,q:_0x522e9f,reply:_0x342487})=>{const _0x5080bc=_0x3c140c;try{if(!_0x522e9f)return _0x342487(_0x5080bc(0xdb));let _0x4c48e9=_0x522e9f;if(!_0x522e9f[_0x5080bc(0xc3)](_0x5080bc(0xd1))&&!_0x522e9f[_0x5080bc(0xc3)](_0x5080bc(0xd0))){_0x342487(_0x5080bc(0xd8));const _0xa65f0=await yts(_0x522e9f);if(!_0xa65f0['videos'][_0x5080bc(0xc2)])return _0x342487(_0x5080bc(0xe0));_0x4c48e9=_0xa65f0['videos'][0x0][_0x5080bc(0xd5)];}const _0x5a8446=_0x5080bc(0xe5)+_0x4c48e9,_0x19612c=await axios['get'](_0x5a8446);if(!_0x19612c[_0x5080bc(0xd2)]||!_0x19612c[_0x5080bc(0xd2)][_0x5080bc(0xcc)]||!_0x19612c[_0x5080bc(0xd2)][_0x5080bc(0xd4)]['downloadUrl'])return _0x342487(_0x5080bc(0xce));await _0x389833['sendMessage'](_0x2e6b0f,{'audio':{'url':_0x19612c[_0x5080bc(0xd2)][_0x5080bc(0xd4)][_0x5080bc(0xca)]},'mimetype':_0x5080bc(0xc5),'ptt':![],'caption':'🎵\x20*Title:*\x20'+_0x19612c[_0x5080bc(0xd2)][_0x5080bc(0xd4)][_0x5080bc(0xc9)]+_0x5080bc(0xdf)+_0x4c48e9},{'quoted':_0x3bc79f});}catch(_0x47bd56){console[_0x5080bc(0xd3)]('Error\x20in\x20play\x20command:',_0x47bd56),_0x342487(_0x5080bc(0xde));}});
+const { cmd } = require("../command"); const yts = require("yt-search"); const axios = require("axios");
+cmd({ pattern: "music", alias: ["audio", "song"], desc: "Search and download audio from YouTube", category: "media", react: "🎧", filename: __filename }, async (conn, mek, m, { from, args, q, reply }) => { try { if (!q) return reply("*𝐏ℓєα𝐬֟፝є 𝐏ʀ๏νιɖє 𝐀 𝐒๏ƞ͛g 𝐍αмє..*");
+
+let videoUrl = q;
+    if (!q.includes("youtube.com") && !q.includes("youtu.be")) {
+        reply("*_🎐 Your song is downloading..._*");
+        const searchResults = await yts(q);
+        if (!searchResults.videos.length) return reply("No results found for your query.");
+        videoUrl = searchResults.videos[0].url;
+    }
+    
+    const apiUrl = `https://apis.davidcyriltech.my.id/youtube/mp3?url=${videoUrl}`;
+    const response = await axios.get(apiUrl);
+    if (!response.data || !response.data.success || !response.data.result.downloadUrl) {
+        return reply("Failed to fetch the audio. Try again later.");
+    }
+    
+    await conn.sendMessage(from, {
+        audio: { url: response.data.result.downloadUrl },
+        mimetype: "audio/mpeg",
+        ptt: false,
+        caption: `🎵 *Title:* ${response.data.result.title}\n🔗 *Link:* ${videoUrl}`
+    }, { quoted: mek });
+    
+} catch (e) {
+    console.error("Error in play command:", e);
+    reply("An error occurred while processing your request.");
+}
+
+});
