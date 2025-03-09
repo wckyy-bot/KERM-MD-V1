@@ -1,3 +1,4 @@
+/*
 const { cmd, commands } = require('../command');
 const config = require('../config');
 const prefix = config.PREFIX;
@@ -760,3 +761,5 @@ cmd({
         reply(`❌ Failed to update group profile picture: ${e.message}`);
     }
 });
+
+*/
