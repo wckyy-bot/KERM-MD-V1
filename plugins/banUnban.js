@@ -3,17 +3,18 @@ const path = require('path');
 const { cmd } = require('../command');
 
 // Chemin du fichier de stockage des numéros bannis
-const bannedFilePath = path.join(__dirname, 'banned.json');
+const bannedFilePath = path.join(__dirname, '../lib/banned.json');
 
 // Fonction pour charger la liste bannie
 function loadBannedList() {
   if (!fs.existsSync(bannedFilePath)) {
-    fs.writeFileSync(bannedFilePath, JSON.stringify([]));
+    // Créer le fichier avec un objet contenant un tableau vide
+    fs.writeFileSync(bannedFilePath, JSON.stringify({ bannedNumbers: [] }, null, 2));
     return [];
   }
   try {
-    const data = fs.readFileSync(bannedFilePath, 'utf-8');
-    return JSON.parse(data);
+    const data = JSON.parse(fs.readFileSync(bannedFilePath, 'utf-8'));
+    return data.bannedNumbers || [];
   } catch (err) {
     console.error("Error reading banned list:", err);
     return [];
@@ -22,12 +23,12 @@ function loadBannedList() {
 
 // Fonction pour sauvegarder la liste bannie
 function saveBannedList(list) {
-  fs.writeFileSync(bannedFilePath, JSON.stringify(list, null, 2));
+  fs.writeFileSync(bannedFilePath, JSON.stringify({ bannedNumbers: list }, null, 2));
 }
 
-/* COMMANDE BAN
-   Permet de bannir définitivement un utilisateur du groupe.
-   Usage : répondre à un message ou fournir un numéro.
+/* COMMAND BAN
+   Bannit définitivement un utilisateur du groupe.
+   Usage : Répondre à un message ou fournir un numéro.
 */
 cmd({
   pattern: "ban",
@@ -39,7 +40,7 @@ cmd({
     if (!isGroup) return reply("❌ This command can only be used in groups.");
     if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
 
-    // Détermination de la cible : soit via une réponse, soit par argument
+    // Déterminer la cible à bannir
     let target;
     if (m.quoted) {
       target = m.quoted.sender;
@@ -50,7 +51,7 @@ cmd({
     }
     if (!target) return reply("❌ Unable to determine the target user.");
 
-    // Charger la liste bannie et ajouter le numéro si ce n'est pas déjà fait
+    // Charger la liste bannie et ajouter le numéro si ce n'est pas déjà présent
     let bannedList = loadBannedList();
     if (!bannedList.includes(target)) {
       bannedList.push(target);
@@ -69,8 +70,8 @@ cmd({
   }
 });
 
-/* COMMANDE UNBAN
-   Permet de débannir un utilisateur en retirant son numéro du fichier de stockage.
+/* COMMAND UNBAN
+   Débannit un utilisateur en retirant son numéro du fichier de stockage.
    Usage : .unban <number>
 */
 cmd({
