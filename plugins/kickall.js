@@ -132,10 +132,6 @@ cmd({
             return reply(`❌ Please mention or reply to the message of the participant to remove.`);
         }
         
-        // Prevent kicking an admin or the bot itself
-        if (groupAdmins.includes(target) || target === conn.user.jid) {
-            return reply(`❌ You cannot remove an admin or the bot.`);
-        }
         
         // Remove the participant from the group
         await conn.groupParticipantsUpdate(from, [target], "remove")
