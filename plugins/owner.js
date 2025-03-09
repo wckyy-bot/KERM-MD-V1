@@ -11,7 +11,7 @@ YT: KermHackTools
 Github: Kgtech-cmr
 */
 
-/*const { cmd } = require('../command');
+const { cmd } = require('../command');
 
 cmd({
     pattern: "owner",
@@ -57,8 +57,8 @@ async (conn, mek, m, { from }) => {
         console.error(error);
         await conn.sendMessage(from, { text: 'Sorry, there was an error fetching the owner contact.' }, { quoted: mek });
     }
-});*/
-const { cmd } = require('../command');
+});
+/*const { cmd } = require('../command');
 
 cmd({
     pattern: "owner",
@@ -113,4 +113,4 @@ async (conn, mek, m, { from }) => {
         console.error(error);
         await conn.sendMessage(from, { text: 'Sorry, there was an error fetching the owner contacts.' }, { quoted: mek });
     }
-});
+});*/
