@@ -85,12 +85,6 @@
         "value":"false",
         "required": false
         
-      },
-      "ALIVE_MSG": {
-        "description": "paste your alive message hear.",
-        "required": true,
-        "value": "_Hi bro am alive now🥷🏽🤝🏾._"
-        
         
       }
     }
