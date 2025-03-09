@@ -2,7 +2,7 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const axios = require("axios");
 
-cmd({ pattern: "music", alias: ["audio", "song5"], desc: "Search and download audio from YouTube", category: "media", react: "🎧", filename: __filename }, async (conn, mek, m, { from, args, q, reply }) => {
+cmd({ pattern: "music2", alias: ["audio", "song"], desc: "Search and download audio from YouTube", category: "media", react: "🎧", filename: __filename }, async (conn, mek, m, { from, args, q, reply }) => {
     try {
         let videoUrl = q;
         if (!q.includes("youtube.com") && !q.includes("youtu.be")) {
@@ -13,11 +13,13 @@ cmd({ pattern: "music", alias: ["audio", "song5"], desc: "Search and download au
         }
 
         const apiUrl = `https://apis.davidcyriltech.my.id/youtube/mp3?url=${videoUrl}`;
+        console.log(`Fetching MP3 from URL: ${apiUrl}`);
         const response = await axios.get(apiUrl);
         if (!response.data || !response.data.success || !response.data.result.downloadUrl) {
             return reply("Failed to fetch the audio. Try again later.");
         }
 
+        console.log(`MP3 URL: ${response.data.result.downloadUrl}`);
         await conn.sendMessage(from, {
             audio: { url: response.data.result.downloadUrl },
             mimetype: "audio/mpeg",
