@@ -1,4 +1,69 @@
 
 
 
-const _0x4b47dc=_0x16d4;function _0x16d4(_0x4b61d6,_0x4acb9e){const _0x1e3f56=_0x1e3f();return _0x16d4=function(_0x16d41e,_0x78e08f){_0x16d41e=_0x16d41e-0xd9;let _0x236f97=_0x1e3f56[_0x16d41e];return _0x236f97;},_0x16d4(_0x4b61d6,_0x4acb9e);}(function(_0x5299e3,_0x3e735a){const _0x5df1f6=_0x16d4,_0x2261ed=_0x5299e3();while(!![]){try{const _0x4eca16=parseInt(_0x5df1f6(0xe3))/0x1*(parseInt(_0x5df1f6(0xe5))/0x2)+-parseInt(_0x5df1f6(0xeb))/0x3+parseInt(_0x5df1f6(0xee))/0x4*(-parseInt(_0x5df1f6(0xdf))/0x5)+-parseInt(_0x5df1f6(0x100))/0x6+-parseInt(_0x5df1f6(0xea))/0x7*(-parseInt(_0x5df1f6(0xf6))/0x8)+-parseInt(_0x5df1f6(0xef))/0x9+parseInt(_0x5df1f6(0xe6))/0xa;if(_0x4eca16===_0x3e735a)break;else _0x2261ed['push'](_0x2261ed['shift']());}catch(_0x466b39){_0x2261ed['push'](_0x2261ed['shift']());}}}(_0x1e3f,0xf2735));function _0x1e3f(){const _0x276152=['download','\x20Quality*\x0a\x0a🔗\x20*Powered\x20By\x20Kerm-md*','5426160Hxzjiy','message','user','❌\x20*Error:*\x20Unable\x20to\x20process\x20the\x20request.\x20Please\x20try\x20again\x20later.','find','data','error','230DEcPjS','@s.whatsapp.net','Invalid\x20API\x20response\x20or\x20no\x20video\x20found.','https://lance-frank-asta.onrender.com/api/downloader?url=','5ijonPA','../command','335876SjSfir','26023600SRgAqF','key','https://','result','160825QxerPC','4718394YBQQCv','length','get','64272MjXySV','4466808ORRTnP','content','status','sendMessage','Download\x20Facebook\x20videos','startsWith','fbdl','440QayxBp','\x0a❌\x20*Error:*\x20','\x0a💬\x20*Query:*\x20','axios','quality','facebook','*`Need\x20a\x20valid\x20Facebook\x20URL!`*','📥\x20*Downloaded\x20in\x20'];_0x1e3f=function(){return _0x276152;};return _0x1e3f();}const {cmd}=require(_0x4b47dc(0xe4)),axios=require(_0x4b47dc(0xf9));cmd({'pattern':'fb','alias':[_0x4b47dc(0xfb),_0x4b47dc(0xf5)],'desc':_0x4b47dc(0xf3),'category':_0x4b47dc(0xfe),'filename':__filename},async(_0x5c82f9,_0x13967d,_0x169ecb,{from:_0x152500,q:_0x3a636a,reply:_0x27a85f})=>{const _0x56a903=_0x4b47dc;try{if(!_0x3a636a||!_0x3a636a[_0x56a903(0xf4)](_0x56a903(0xe8)))return _0x27a85f(_0x56a903(0xfc));await _0x5c82f9[_0x56a903(0xf2)](_0x152500,{'react':{'text':'⏳','key':_0x13967d[_0x56a903(0xe7)]}});const _0x5415da=_0x56a903(0xe2)+encodeURIComponent(_0x3a636a),{data:_0x202964}=await axios[_0x56a903(0xed)](_0x5415da);if(!_0x202964?.[_0x56a903(0xf0)]?.[_0x56a903(0xf1)]||!_0x202964?.[_0x56a903(0xf0)]?.['data']?.[_0x56a903(0xe9)]?.[_0x56a903(0xec)])throw new Error(_0x56a903(0xe1));let _0x25c1e0=_0x202964[_0x56a903(0xf0)][_0x56a903(0xdd)][_0x56a903(0xe9)][_0x56a903(0xdc)](_0x331eac=>_0x331eac[_0x56a903(0xfa)]==='HD')||_0x202964[_0x56a903(0xf0)][_0x56a903(0xdd)][_0x56a903(0xe9)][_0x56a903(0xdc)](_0x7a5b4e=>_0x7a5b4e[_0x56a903(0xfa)]==='SD');if(!_0x25c1e0)throw new Error('No\x20valid\x20video\x20URL\x20found.');await _0x5c82f9[_0x56a903(0xf2)](_0x152500,{'video':{'url':_0x25c1e0['url']},'caption':_0x56a903(0xfd)+_0x25c1e0[_0x56a903(0xfa)]+_0x56a903(0xff)},{'quoted':_0x13967d});}catch(_0x5781e8){console[_0x56a903(0xde)]('FB\x20Download\x20Error:',_0x5781e8);const _0x18e627=_0x5c82f9[_0x56a903(0xda)]['id']['split'](':')[0x0]+_0x56a903(0xe0);await _0x5c82f9[_0x56a903(0xf2)](_0x18e627,{'text':'⚠️\x20*FB\x20Downloader\x20Error!*\x0a\x0a📍\x20*Group/User:*\x20'+_0x152500+_0x56a903(0xf8)+_0x3a636a+_0x56a903(0xf7)+(_0x5781e8[_0x56a903(0xd9)]||_0x5781e8)}),_0x27a85f(_0x56a903(0xdb));}});
+const { cmd } = require('../command');
+const axios = require('axios');
+
+cmd({
+  pattern: "fb",
+  alias: ["facebook", "fbdl"],
+  desc: "Download Facebook videos",
+  category: "download",
+  filename: __filename
+}, async (conn, m, store, { from, q, reply }) => {
+  try {
+    if (!q || !q.startsWith("https://")) {
+      return reply("*`Need a valid Facebook URL!`*");
+    }
+
+    await conn.sendMessage(from, { react: { text: '⏳', key: m.key } });
+
+    const apiUrl = `https://lance-frank-asta.onrender.com/api/downloader?url=${encodeURIComponent(q)}`;
+    const { data } = await axios.get(apiUrl, { timeout: 10000 }); // Added timeout for request
+
+    if (!data?.content?.status || !data?.content?.data?.result?.length) {
+      throw new Error("Invalid API response or no video found.");
+    }
+
+    let videoData = data.content.data.result.find(v => v.quality === "HD") || 
+                    data.content.data.result.find(v => v.quality === "SD");
+
+    if (!videoData) {
+      throw new Error("No valid video URL found.");
+    }
+
+    await conn.sendMessage(from, {
+      video: { url: videoData.url },
+      caption: `📥 *Downloaded in ${videoData.quality} Quality*\n\n🔗 *Powered By Kerm-md*`
+    }, { quoted: m });
+
+    // Send an image with the formatted info as a caption and context info
+    const formattedInfo = `*🎬 Video Info:*\n🔗 URL: ${q}\n📥 Quality: ${videoData.quality}\n\n*Powered By Kerm-md*`;
+    await conn.sendMessage(from, {
+      image: { url: `https://files.catbox.moe/heu4tc.png` },
+      caption: formattedInfo,
+      contextInfo: { 
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363321386877609@newsletter',
+          newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃 𝐑𝐄𝐏𝐎',
+          serverMessageId: 143
+        }
+      }
+    }, { quoted: m });
+
+  } catch (error) {
+    console.error("FB Download Error:", error);
+
+    // Send error details to bot owner
+    const ownerNumber = conn.user.id.split(":")[0] + "@s.whatsapp.net";
+    await conn.sendMessage(ownerNumber, {
+      text: `⚠️ *FB Downloader Error!*\n\n📍 *Group/User:* ${from}\n💬 *Query:* ${q}\n❌ *Error:* ${error.message || error}`
+    });
+
+    // Notify the user
+    reply("❌ *Error:* Unable to process the request. Please try again later.");
+  }
+});
