@@ -11,7 +11,7 @@ YT: KermHackTools
 Github: Kgtech-cmr
 */
 
-const { cmd } = require('../command');
+/*const { cmd } = require('../command');
 
 cmd({
     pattern: "owner",
@@ -57,60 +57,58 @@ async (conn, mek, m, { from }) => {
         console.error(error);
         await conn.sendMessage(from, { text: 'Sorry, there was an error fetching the owner contact.' }, { quoted: mek });
     }
-});
-/*const { cmd } = require('../command');
+});*/
+
+
+
+const { cmd } = require('../command');
 
 cmd({
-    pattern: "owner",
-    react: "👑", // Reaction emoji when the command is triggered
-    alias: ["kerm"],
-    desc: "Get owner number",
-    category: "main",
-    filename: __filename
-}, 
-async (conn, mek, m, { from }) => {
-    try {
-        // Owners' contact info
-        const owners = [
-            { number: '+237656520674', name: '༒𝐋𝐎𝐑𝐃 𝐊𝐄𝐑𝐌༒', organization: 'UD TEAM' },
-            { number: '+237650564445', name: 'ᵏᵍᶠ┘𝙏𝞖⧠𝙂𝞘𝙁𝙁𝞓𝞒𝞢𝞜𝞗└', organization: 'UD TEAM' }
-        ];
+  pattern: "owner",
+  react: "👑", 
+  alias: ["kerm"],
+  desc: "Get owner number",
+  category: "main",
+  filename: __filename
+}, async (conn, mek, m, { from }) => {
+  try {
+    // Propriétaires' informations de contact
+    const owners = [
+      { number: '+237656520674', name: '༒𝐋𝐎𝐑𝐃 𝐊𝐄𝐑𝐌༒', organization: 'UD TEAM' },
+      { number: '+237650564445', name: 'ᵏᵍᶠ┘𝐓𝐄𝐑𝐌𝐈𝐍𝐀𝐓𝐎𝐑', organization: 'UD TEAM' }
+    ];
 
-        let contacts = [];
+    let contacts = [];
+    owners.forEach((owner) => {
+      const vcard = `BEGIN:VCDCARD\n` +
+        `VERSION:3.0\n` +
+        `FN:${owner.name}\n` +
+        `ORG:${owner.organization};\n` +
+        `TEL;type=CELL;type=VOICE;waid=${owner.number.replace('+', '')}:${owner.number}\n` +
+        `END:VCARD`;
+      contacts.push({ vcard });
+    });
 
-        for (const owner of owners) {
-            const vcard = `BEGIN:VCARD\n` +
-                          `VERSION:3.0\n` +
-                          `FN:${owner.name}\n` +  // Full Name
-                          `ORG:${owner.organization};\n` +  // Organization (Optional)
-                          `TEL;type=CELL;type=VOICE;waid=${owner.number.replace('+', '')}:${owner.number}\n` +  // WhatsApp ID and number
-                          `END:VCARD`;
+    // Envoyer les vCards
+    const sentVCard = await conn.sendMessage(from, { contacts: { displayName: "Propriétaires", contacts } });
 
-            contacts.push({ vcard });
-        }
+    // Mentionner les deux propriétaires
+    const mentionedJid = owners.map(owner => owner.number.replace('+', '') + '@s.whatsapp.net');
 
-        // Send the vCards
-        const sentVCard = await conn.sendMessage(from, {
-            contacts: {
-                displayName: "Owners",
-                contacts
-            }
-        });
+    // Envoyer un message de réponse qui référence les vCards
+    await conn.sendMessage(from, {
+      text: `Voici les contacts des propriétaires :\n\n${owners.map(o => `📌 ${o.name} : ${o.number}`).join('\n')}`,
+      contextInfo: {
+        mentionedJid,
+        quotedMessageId: sentVCard.key.id
+      }
+    }, { quoted: mek });
+  } catch (error) {
+    console.error(error);
+    await conn.sendMessage(from, {
+      text: 'Désolé, il y a eu une erreur lors de la récupération des contacts des propriétaires.'
+    }, { quoted: mek });
+  }
+});
 
-        // Mention both owners
-        const mentionedJid = owners.map(owner => owner.number.replace('+', '') + '@s.whatsapp.net');
 
-        // Send a reply message that references the vCards
-        await conn.sendMessage(from, {
-            text: `Here are the owner contacts:\n\n${owners.map(o => `📌 ${o.name}: ${o.number}`).join('\n')}`,
-            contextInfo: {
-                mentionedJid,
-                quotedMessageId: sentVCard.key.id // Reference the vCard message
-            }
-        }, { quoted: mek });
-
-    } catch (error) {
-        console.error(error);
-        await conn.sendMessage(from, { text: 'Sorry, there was an error fetching the owner contacts.' }, { quoted: mek });
-    }
-});*/
