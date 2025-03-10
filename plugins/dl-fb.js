@@ -29,7 +29,7 @@ cmd({
       throw new Error("No valid video URL found.");
     }
 
-    const formattedInfo = `📥 *Downloaded in ${videoData.quality} Quality*\n\n🔗 *Powered By Kerm-md*`;
+    const formattedInfo = `📥 *Downloaded in ${videoData.quality} Quality*\n\n> 🔗 *Powered By Kerm-md*`;
 
     await conn.sendMessage(from, {
       video: { url: videoData.url },
