@@ -29,9 +29,21 @@ cmd({
       throw new Error("No valid video URL found.");
     }
 
+    const formattedInfo = `📥 *Downloaded in ${videoData.quality} Quality*\n\n🔗 *Powered By Kerm-md*`;
+
     await conn.sendMessage(from, {
       video: { url: videoData.url },
-      caption: `📥 *Downloaded in ${videoData.quality} Quality*\n\n🔗 *Powered By Kerm-md*`
+      caption: formattedInfo,
+      contextInfo: { 
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363321386877609@newsletter',
+          newsletterName: '𝐊𝐄𝐑𝐌 𝐅𝐁',
+          serverMessageId: 143
+        }
+      }
     }, { quoted: m });
 
   } catch (error) {
