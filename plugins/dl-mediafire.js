@@ -10,7 +10,12 @@ cmd({
   react: "🎥",
   category: "download",
   filename: __filename
-}, async (conn, m, store, { from, quoted, q, reply }) => {
+}, async (conn, m, store, {
+  from,
+  quoted,
+  q,
+  reply
+}) => {
   try {
     if (!q) {
       return reply("❌ Please provide a valid MediaFire link.");
@@ -45,17 +50,7 @@ cmd({
       document: { url: dl_link },
       mimetype: mime_type,
       fileName: file_name,
-      caption: caption,
-      contextInfo: { 
-        mentionedJid: [m.sender],
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: '120363321386877609@newsletter',
-          newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃 𝐑𝐄𝐏𝐎',
-          serverMessageId: 143
-        }
-      }
+      caption: caption
     }, { quoted: m });
 
   } catch (error) {
@@ -63,3 +58,4 @@ cmd({
     reply("❌ An error occurred while processing your request. Please try again.");
   }
 });
+        
