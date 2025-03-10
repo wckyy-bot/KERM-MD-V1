@@ -1,3 +1,74 @@
 
 
-const _0x43dbd2=_0x493a;(function(_0x4a0c7d,_0x22bd19){const _0x3975fe=_0x493a,_0x59e13d=_0x4a0c7d();while(!![]){try{const _0xfff75=parseInt(_0x3975fe(0x145))/0x1+parseInt(_0x3975fe(0x142))/0x2*(parseInt(_0x3975fe(0x155))/0x3)+-parseInt(_0x3975fe(0x162))/0x4+-parseInt(_0x3975fe(0x15b))/0x5*(-parseInt(_0x3975fe(0x14c))/0x6)+-parseInt(_0x3975fe(0x158))/0x7+-parseInt(_0x3975fe(0x152))/0x8+parseInt(_0x3975fe(0x14f))/0x9;if(_0xfff75===_0x22bd19)break;else _0x59e13d['push'](_0x59e13d['shift']());}catch(_0x3617ab){_0x59e13d['push'](_0x59e13d['shift']());}}}(_0x5dfe,0x516fe));function _0x493a(_0x1a01b3,_0x2fb37e){const _0x5dfe6c=_0x5dfe();return _0x493a=function(_0x493acc,_0x7e69d6){_0x493acc=_0x493acc-0x142;let _0x26189d=_0x5dfe6c[_0x493acc];return _0x26189d;},_0x493a(_0x1a01b3,_0x2fb37e);}function _0x5dfe(){const _0x1fda90=['error','No\x20caption\x20available.','image','An\x20error\x20occurred:\x20','1005024YBPYbW','insta','message','474AffyQN','instagram.com','\x0a💬\x20*Comments:*\x20','652213dkNbWZ','📝\x20*Caption:*\x0a','url','Download\x20Instagram\x20reels\x20or\x20image\x20posts','type','axios','Error\x20in\x20Instagram\x20downloader\x20command:','24cOBtyN','downloader','igdl','2681865YKbkkr','instadl','data','709216WBXOej','get','https://delirius-apiofc.vercel.app/download/igv2?url=','516UIiKvI','status','❤️\x20*Likes:*\x20','4472496dbREQU','reel','Failed\x20to\x20fetch\x20Instagram\x20media.','401800fxGIkV','\x0a👥\x20*Followers:*\x20','sender'];_0x5dfe=function(){return _0x1fda90;};return _0x5dfe();}const axios=require(_0x43dbd2(0x14a)),{cmd,commands}=require('../command');cmd({'pattern':_0x43dbd2(0x163),'alias':[_0x43dbd2(0x14e),_0x43dbd2(0x159),'ig',_0x43dbd2(0x150)],'desc':_0x43dbd2(0x148),'category':_0x43dbd2(0x14d),'react':'⏳','filename':__filename},async(_0x3f51ce,_0x5d9483,_0x25bb95,{from:_0x1a9853,args:_0x433482,q:_0x2e0f84,reply:_0x5e2b7b,react:_0xa69f90})=>{const _0x33db66=_0x43dbd2;try{if(!_0x2e0f84)return _0x5e2b7b('Please\x20provide\x20an\x20Instagram\x20post\x20or\x20reel\x20link.');if(!_0x2e0f84['includes'](_0x33db66(0x143)))return _0x5e2b7b('Invalid\x20Instagram\x20link.');const _0x12866c=_0x33db66(0x154)+_0x2e0f84,{data:_0x3fa77e}=await axios[_0x33db66(0x153)](_0x12866c);if(!_0x3fa77e[_0x33db66(0x156)]||!_0x3fa77e[_0x33db66(0x151)])return await _0xa69f90('❌'),_0x5e2b7b(_0x33db66(0x15a));const {username:_0x36c99c,fullname:_0x1bd843,caption:_0xdf3c03,likes:_0x26d7ad,comments:_0x3682c3,followed:_0x2814b7,download:_0x208b5f}=_0x3fa77e['data'],_0x2e6dc9='📸\x20*Instagram\x20Post*\x20📸\x0a\x0a'+('👤\x20*User:*\x20'+_0x1bd843+'\x20(@'+_0x36c99c+')\x0a')+(_0x33db66(0x157)+_0x26d7ad+_0x33db66(0x144)+_0x3682c3+_0x33db66(0x15c)+_0x2814b7+'\x0a')+(_0x33db66(0x146)+(_0xdf3c03||_0x33db66(0x15f)));for(const _0x54ec9a of _0x208b5f){if(_0x54ec9a[_0x33db66(0x149)]===_0x33db66(0x160))await _0x3f51ce['sendMessage'](_0x1a9853,{'image':{'url':_0x54ec9a[_0x33db66(0x147)]},'caption':_0x2e6dc9,'contextInfo':{'mentionedJid':[_0x25bb95['sender']]}},{'quoted':_0x5d9483});else _0x54ec9a[_0x33db66(0x149)]==='video'&&await _0x3f51ce['sendMessage'](_0x1a9853,{'video':{'url':_0x54ec9a['url']},'caption':_0x2e6dc9,'contextInfo':{'mentionedJid':[_0x25bb95[_0x33db66(0x15d)]]}},{'quoted':_0x5d9483});}await _0xa69f90('✅');}catch(_0x3f6da8){console[_0x33db66(0x15e)](_0x33db66(0x14b),_0x3f6da8),await _0xa69f90('❌'),_0x5e2b7b(_0x33db66(0x161)+_0x3f6da8[_0x33db66(0x164)]);}});
+const axios = require("axios");
+const { cmd, commands } = require('../command');
+
+cmd({
+    pattern: "insta",
+    alias: ["igdl", "reel", "ig", "instadl"],
+    desc: "Download Instagram reels or image posts",
+    category: "downloader",
+    react: "⏳",
+    filename: __filename
+},
+async (conn, mek, m, { from, args, q, reply, react }) => {
+    try {
+        if (!q) return reply("Please provide an Instagram post or reel link.");
+        if (!q.includes("instagram.com")) return reply("Invalid Instagram link.");
+
+        const apiUrl = `https://delirius-apiofc.vercel.app/download/igv2?url=${q}`;
+        const { data } = await axios.get(apiUrl);
+
+        if (!data.status || !data.data) {
+            await react("❌"); 
+            return reply("Failed to fetch Instagram media.");
+        }
+
+        const { username, fullname, caption, likes, comments, followed, download } = data.data;
+
+        const captionText = `📸 *Instagram Post* 📸\n\n` +
+                            `👤 *User:* ${fullname} (@${username})\n` +
+                            `❤️ *Likes:* ${likes}\n💬 *Comments:* ${comments}\n👥 *Followers:* ${followed}\n` +
+                            `📝 *Caption:*\n${caption || "No caption available."}`;
+
+        for (const media of download) {
+            if (media.type === "image") {
+                await conn.sendMessage(from, {
+                    image: { url: media.url },
+                    caption: captionText,
+                    contextInfo: { 
+                        mentionedJid: [m.sender],
+                        forwardingScore: 999,
+                        isForwarded: true,
+                        forwardedNewsletterMessageInfo: {
+                            newsletterJid: '120363321386877609@newsletter',
+                            newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃 𝐑𝐄𝐏𝐎',
+                            serverMessageId: 143
+                        }
+                    }
+                }, { quoted: mek });
+            } else if (media.type === "video") {
+                await conn.sendMessage(from, {
+                    video: { url: media.url },
+                    caption: captionText,
+                    contextInfo: { 
+                        mentionedJid: [m.sender],
+                        forwardingScore: 999,
+                        isForwarded: true,
+                        forwardedNewsletterMessageInfo: {
+                            newsletterJid: '120363321386877609@newsletter',
+                            newsletterName: '𝐊𝐄𝐑𝐌 𝐌𝐃 𝐑𝐄𝐏𝐎',
+                            serverMessageId: 143
+                        }
+                    }
+                }, { quoted: mek });
+            }
+        }
+
+        await react("✅"); // React after successfully sending media
+    } catch (e) {
+        console.error("Error in Instagram downloader command:", e);
+        await react("❌");
+        reply(`An error occurred: ${e.message}`);
+    }
+});
