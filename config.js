@@ -26,7 +26,10 @@ AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
 AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*SEEN YOUR STATUS JUST NOW KERM-MD 👻*",
 // set the auto reply massage on status reply
 AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
-// make true if you want auto reply on status 
+// make true if you want auto reply on status
+
+CUSTOM_REACT: process.env.CUSTOM_REACT || "false",
+// make this true for custum emoji react
 MODE: process.env.MODE || "private",
 AUTO_VOICE: process.env.AUTO_VOICE || "false",
 AUTO_STICKER: process.env.AUTO_STICKER || "false",
