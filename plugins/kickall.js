@@ -94,7 +94,7 @@ cmd({
 
 cmd({
   pattern: "kick",
-  desc: "Removes a participant by replying to or mentioning their message.",
+  desc: "Removes a participant by replying to or mentioning their message. (Admins can also be kicked)",
   react: "🚪",
   category: "group",
   filename: __filename,
@@ -116,7 +116,7 @@ cmd({
         // Check if the bot has admin privileges
         if (!isBotAdmins) return reply("❌ I need admin privileges to remove group members.");
         
-        // Determine the target user from reply or mention
+        // Determine the target user using reply or mention
         let target;
         if (m.quoted) {
             target = m.quoted.sender;
@@ -130,20 +130,13 @@ cmd({
             return reply("❌ Please mention or reply to the message of the participant to remove.");
         }
         
-        // Check that the target is not a group admin
-        const adminIds = participants.filter(p => p.admin).map(p => p.id);
-        if (adminIds.includes(target)) {
-            return reply("❌ You cannot remove a group admin.");
-        }
-        
-        // Attempt to remove the user from the group
+        // Remove the participant from the group (admins can also be kicked)
         await conn.groupParticipantsUpdate(from, [target], "remove")
           .catch(err => {
               console.error(`⚠️ Failed to remove ${target}:`, err);
               return reply("❌ An error occurred while trying to remove the participant.");
           });
         
-        // Send a success message without including the target JID
         reply("*_Success! The participant has been removed from the group._*");
     } catch (error) {
         console.error('Error while executing kick:', error);
