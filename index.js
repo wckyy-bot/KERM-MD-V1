@@ -67,12 +67,12 @@ const {
   //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-const sessdata = config.SESSION_ID.replace("KERM-MD~", '');
+const sessdata = config.SESSION_ID.replace("KERM-MD-V1~", '');
 const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
 fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
-console.log("Session downloaded ✅")
+console.log("SESSION DOWNLOADED COMPLETED ✅")
 })})}
 
 const express = require("express");
@@ -102,15 +102,15 @@ const port = process.env.PORT || 9090;
   connectToWA()
   }
   } else if (connection === 'open') {
-  console.log('🧬 Installing Plugins')
+  console.log('♻️ INSTALLING PLUGINS FILES PLEASE WAIT... 🪄')
   const path = require('path');
   fs.readdirSync("./plugins/").forEach((plugin) => {
   if (path.extname(plugin).toLowerCase() == ".js") {
   require("./plugins/" + plugin);
   }
   });
-  console.log('Plugins installed successful ✅')
-  console.log('Bot connected to whatsapp ✅')
+  console.log('PLUGINS FILES INSTALL SUCCESSFULLY ✅')
+  console.log('KERM_MD-V1 CONNECTED TO WHATSAPP ENJOY ✅')
   
   let up = `*╭──────────────●●►*
 > *➺Kᴇʀᴍ_ᴍᴅ-ᴠ1 ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ .ᴍᴇɴᴜ ᴛᴏ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴋɢ ᴛᴇᴄʜ✅*
@@ -791,7 +791,7 @@ if (!isReact && senderNumber === botNumber) {
   }
   
   app.get("/", (req, res) => {
-  res.send("KERM MD STARTED ✅");
+  res.send("HEY, KERM-MD-V1 STARTED ✅");
   });
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
