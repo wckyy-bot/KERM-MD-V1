@@ -29,7 +29,7 @@ cmd({
         const channelLink = "https://whatsapp.com/channel/0029Vafn6hc7DAX3fzsKtn45";
 
         // Send the channel link to the user
-        reply(`Here's 💁🏽 the link to our official WhatsApp Kerm channel:\n\n${channelLink}\n\n> Join us to stay updated with the latest news and announcements🧞‍♂️.`);
+        reply(`*ʜᴇʀᴇ's ᴛʜᴇ ʟɪɴᴋ ᴛᴏ ᴏᴜʀ ᴏғғɪᴄɪᴀʟ ᴡʜᴀᴛsᴀᴘᴘ ᴀʟɪ ᴄʜᴀɴɴᴇʟ*:\n\n${channelLink}\n\n> Join us to stay updated with the latest news and announcements🧞‍♂️.`);
     } catch (error) {
         // Log and notify about any errors
         console.error("Error sending channel link:", error.message);
