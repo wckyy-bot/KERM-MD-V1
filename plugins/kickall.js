@@ -137,7 +137,8 @@ cmd({
               return reply("❌ An error occurred while trying to remove the participant.");
           });
         
-        reply("*_Success! The participant has been removed from the group._*");
+        // Send a success message with the removed user tagged
+        reply("✅ Success! The participant has been removed from the group.", { mentions: [target] });
     } catch (error) {
         console.error('Error while executing kick:', error);
         reply('❌ An error occurred while executing the command.');
