@@ -50,7 +50,7 @@ cmd({
         const supportLink = "https://chat.whatsapp.com/L5MM9j04Caz4y2EZHRnD1Z";
 
         // Send the support link to the user
-        reply(`Need help 💁🏽 or have questions ? Join Kerm support group:\n\n${supportLink}\n\n> Feel free to ask your questions or report issues🙇🏽.`);
+        reply(`*ɴᴇᴇᴅ ʜᴇʟᴘ ᴏʀ ʜᴀᴠᴇ ǫᴜᴇsᴛɪᴏɴs ? ᴊᴏɪɴ ᴀʟɪ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ🪀*:\n\n${supportLink}\n\n> Feel free to ask your questions or report issues🙇🏽.`);
     } catch (error) {
         // Log and notify about any errors
         console.error("Error sending support link:", error.message);
