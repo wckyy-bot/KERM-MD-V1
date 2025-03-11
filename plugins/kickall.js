@@ -92,6 +92,9 @@ cmd({
     reply(`✅ *Kickall operation has been stopped by the user.*`);
 });
 
+const config = require('../config');
+const { cmd } = require('../command');
+
 cmd({
   pattern: "kick",
   desc: "Removes a participant by replying to or mentioning their message. (Admins can also be kicked)",
@@ -109,14 +112,14 @@ cmd({
     reply
 }) => {
     try {
-        // Vérifier que la commande est utilisée dans un groupe
+        // Check if the command is used in a group
         if (!isGroup) return reply("❌ This command can only be used in groups.");
-        // Vérifier que l'utilisateur est admin ou owner
+        // Only admins or the owner can use this command
         if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
-        // Vérifier que le bot a les privilèges admin
+        // Check if the bot has admin privileges
         if (!isBotAdmins) return reply("❌ I need admin privileges to remove group members.");
         
-        // Déterminer la cible à kicker via reply ou mention
+        // Determine the target user using reply or mention
         let target;
         if (m.quoted) {
             target = m.quoted.sender;
@@ -130,17 +133,16 @@ cmd({
             return reply("❌ Please mention or reply to the message of the participant to remove.");
         }
         
-        // Retirer l'utilisateur du groupe (même s'il est admin)
+        // Remove the participant from the group (admins can also be kicked)
         await conn.groupParticipantsUpdate(from, [target], "remove")
           .catch(err => {
               console.error(`⚠️ Failed to remove ${target}:`, err);
               return reply("❌ An error occurred while trying to remove the participant.");
           });
         
-        // Créer le message de succès en taguant l'utilisateur (affichage sans JID complet)
-        const tag = target.split('@')[0]; // Extrait le numéro sans le domaine
-        reply(`*_Success! The user @${tag} has been removed successfully._*`, { mentions: [target] });
-        
+        // Extraire le tag à partir du JID (ex: "1234567890" sans "@s.whatsapp.net")
+        const tag = target.split('@')[0];
+        reply(`User @${userToKick.split('@')[0]} has been kicked.`, null, { mentions: [userToKick] });
     } catch (error) {
         console.error('Error while executing kick:', error);
         reply('❌ An error occurred while executing the command.');
