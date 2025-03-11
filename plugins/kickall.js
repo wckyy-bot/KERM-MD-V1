@@ -109,14 +109,14 @@ cmd({
     reply
 }) => {
     try {
-        // Check if the command is used in a group
+        // Vérifier que la commande est utilisée dans un groupe
         if (!isGroup) return reply("❌ This command can only be used in groups.");
-        // Only admins or the owner can use this command
+        // Vérifier que l'utilisateur est admin ou owner
         if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
-        // Check if the bot has admin privileges
+        // Vérifier que le bot a les privilèges admin
         if (!isBotAdmins) return reply("❌ I need admin privileges to remove group members.");
         
-        // Determine the target user using reply or mention
+        // Déterminer la cible à kicker via reply ou mention
         let target;
         if (m.quoted) {
             target = m.quoted.sender;
@@ -130,15 +130,17 @@ cmd({
             return reply("❌ Please mention or reply to the message of the participant to remove.");
         }
         
-        // Remove the participant from the group (admins can also be kicked)
+        // Retirer l'utilisateur du groupe (même s'il est admin)
         await conn.groupParticipantsUpdate(from, [target], "remove")
           .catch(err => {
               console.error(`⚠️ Failed to remove ${target}:`, err);
               return reply("❌ An error occurred while trying to remove the participant.");
           });
         
-        // Send a success message with the removed user tagged
-        reply("✅ Success! The participant has been removed from the group.", { mentions: [target] });
+        // Créer le message de succès en taguant l'utilisateur (affichage sans JID complet)
+        const tag = target.split('@')[0]; // Extrait le numéro sans le domaine
+        reply(`*_Success! The user @${tag} has been removed successfully._*`, { mentions: [target] });
+        
     } catch (error) {
         console.error('Error while executing kick:', error);
         reply('❌ An error occurred while executing the command.');
