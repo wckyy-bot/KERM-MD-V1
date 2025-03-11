@@ -92,9 +92,6 @@ cmd({
     reply(`✅ *Kickall operation has been stopped by the user.*`);
 });
 
-const config = require('../config');
-const { cmd } = require('../command');
-
 cmd({
   pattern: "kick",
   desc: "Removes a participant by replying to or mentioning their message. (Admins can also be kicked)",
