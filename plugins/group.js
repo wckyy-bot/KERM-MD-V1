@@ -124,3 +124,77 @@ cmd({
         reply('❌ An error occurred while executing the command.');
     }
 });
+
+cmd({
+    pattern: "ginfo",
+    react: "🥏",
+    alias: ["groupinfo"],
+    desc: "Get group information.",
+    category: "group",
+    use: '.ginfo',
+    filename: __filename
+},
+async (conn, mek, m, {
+    from,
+    quoted,
+    isGroup,
+    isOwner,
+    isAdmins,
+    isBotAdmins,
+    participants,
+    reply
+}) => {
+    try {
+        // Ensure the command is executed in a group
+        if (!isGroup) return reply(`❌ This command can only be used in groups.`);
+
+        // Ensure the user is an admin or the owner
+        if (!isAdmins && !isOwner) return reply(`❌ Only admins and the owner can use this command.`);
+
+        // Ensure the bot has admin privileges
+        if (!isBotAdmins) return reply(`❌ I need admin privileges to execute this command.`);
+
+        // Fetch the default reply messages
+        const msr = (await fetch('https://raw.githubusercontent.com/JawadYTX/KHAN-DATA/refs/heads/main/MSG/mreply.json')
+            .then(res => res.json())).replyMsg;
+
+        // Attempt to get the group profile picture, fallback if unavailable
+        const defaultImages = [
+            'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+            'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+            'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+        ];
+
+        let ppUrl = await conn.profilePictureUrl(from, 'image').catch(() => null);
+        if (!ppUrl) {
+            ppUrl = defaultImages[Math.floor(Math.random() * defaultImages.length)];
+        }
+
+        // Get group metadata
+        const metadata = await conn.groupMetadata(from);
+        const groupAdmins = participants.filter(p => p.admin);
+        const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
+        const owner = metadata.owner;
+
+        // Build the group information message
+        const gdata = `*「 Group Information 」*\n
+📛 *Group Name:* ${metadata.subject}
+🆔 *Group Jid:* ${metadata.id}
+👥 *Participant Count:* ${metadata.size}
+👑 *Group Creator:* @${owner.split('@')[0]}
+📝 *Group Description:* ${metadata.desc?.toString() || 'No description provided'}\n
+⭐ *Group Admins:* \n${listAdmin}\n`;
+
+        // Send the group information message with the profile picture
+        await conn.sendMessage(from, {
+            image: { url: ppUrl },
+            caption: gdata + config.FOOTER
+        }, { quoted: mek });
+
+    } catch (e) {
+        // React with ❌ and send an error message
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+        console.error('Error in ginfo command:', e);
+        reply(`❌ *An error occurred!!*\n\n${e}`);
+    }
+});
