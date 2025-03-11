@@ -22,6 +22,7 @@ module.exports = {
 SESSION_ID: process.env.SESSION_ID || "PUT YOUR SESSION ID HERE",
 AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "true",
 AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
+// make true if you want auto reply on status
 AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*SEEN YOUR STATUS JUST NOW ALI-MD 👻*",
 // set the auto reply massage on status reply  
 MODE: process.env.MODE || "private",
