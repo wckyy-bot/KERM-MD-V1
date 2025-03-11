@@ -21,16 +21,6 @@ function convertToBool(text, fault = 'true') {
 module.exports = {
 SESSION_ID: process.env.SESSION_ID || "PUT YOUR SESSION ID HERE",
 AUTO_READ_STATUS: process.env.AUTO_READ_STATUS || "true",
-AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",// make true if you want auto reply on status
-// make true if you want auto reply on status
-AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*SEEN YOUR STATUS JUST NOW KERM-MD 👻*",// set the auto reply massage on status reply
-// set the auto reply massage on status reply
-AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",// make true if you want auto reply on status
-// make true if you want auto reply on status
-CUSTOM_REACT: process.env.CUSTOM_REACT || "true",// make this true for custum emoji react
-// make this true for custum emoji react
-CUSTOM_REACT_EMOJIS: process.env.CUSTOM_REACT_EMOJIS || "💀",// chose custom react emojis by yourself 
-// chose custom react emojis by yourself 
 MODE: process.env.MODE || "private",
 AUTO_VOICE: process.env.AUTO_VOICE || "false",
 AUTO_STICKER: process.env.AUTO_STICKER || "false",
@@ -45,10 +35,6 @@ FAKE_TYPING: process.env.FAKE_TYPING || "false",
 ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || "true",
 CURRENT_STATUS: process.env.CURRENT_STATUS || "true",
 AUTO_REACT: process.env.AUTO_REACT || "false",
-READ_CMD: process.env.READ_CMD || "true",
-// true if want mark commands as read
-READ_MESSAGE: process.env.READ_MESSAGE || "false",
-// Turn true or false for automatic read msgs
 HEART_REACT: process.env.HEART_REACT || "false",
 OWNER_REACT: process.env.OWNER_REACT || "false",
 BOT_NAME: process.env.BOT_NAME || "『𝗞𝗘𝗥𝗠 𝗠𝗗 𝗩1』",
