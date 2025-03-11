@@ -22,9 +22,9 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        
         // ➡️ Vérifier si l'utilisateur est l'Owner
         if (!isOwner) return reply("❌ Only the owner can use this command.");
+        
         const steps = [
             '💻 *KERM-MD-V1 HACK STARTING...* 💻',
             '',
