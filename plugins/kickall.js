@@ -98,51 +98,55 @@ cmd({
   react: "🚪",
   category: "group",
   filename: __filename,
-}, async (conn, mek, m, { from, quoted, isGroup, isAdmins, isOwner, participants, isBotAdmins, reply }) => {
-  try {
-    // Vérifier que la commande est utilisée dans un groupe
-    if (!isGroup) return reply("❌ This command can only be used in groups.");
-    // Vérifier que l'utilisateur est admin ou owner
-    if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
-    // Vérifier que le bot a les privilèges admin
-    if (!isBotAdmins) return reply("❌ I need admin privileges to remove group members.");
-    
-    // Détermination de la cible à kicker
-    let target;
-    // 1. Si la commande est en réponse à un message
-    if (m.quoted) {
-      target = m.quoted.sender;
+}, async (conn, mek, m, {
+    from,
+    quoted,
+    isGroup,
+    isAdmins,
+    isOwner,
+    participants,
+    isBotAdmins,
+    reply
+}) => {
+    try {
+        // Check if the command is used in a group
+        if (!isGroup) return reply("❌ This command can only be used in groups.");
+        // Only admins or the owner can use this command
+        if (!isAdmins && !isOwner) return reply("❌ Only group admins or the owner can use this command.");
+        // Check if the bot has admin privileges
+        if (!isBotAdmins) return reply("❌ I need admin privileges to remove group members.");
+        
+        // Determine the target user from reply or mention
+        let target;
+        if (m.quoted) {
+            target = m.quoted.sender;
+        } else if (m.mentionedJid && m.mentionedJid.length > 0) {
+            target = m.mentionedJid[0];
+        } else if (m.msg && m.msg.contextInfo && m.msg.contextInfo.mentionedJid && m.msg.contextInfo.mentionedJid.length > 0) {
+            target = m.msg.contextInfo.mentionedJid[0];
+        }
+        
+        if (!target) {
+            return reply("❌ Please mention or reply to the message of the participant to remove.");
+        }
+        
+        // Check that the target is not a group admin
+        const adminIds = participants.filter(p => p.admin).map(p => p.id);
+        if (adminIds.includes(target)) {
+            return reply("❌ You cannot remove a group admin.");
+        }
+        
+        // Attempt to remove the user from the group
+        await conn.groupParticipantsUpdate(from, [target], "remove")
+          .catch(err => {
+              console.error(`⚠️ Failed to remove ${target}:`, err);
+              return reply("❌ An error occurred while trying to remove the participant.");
+          });
+        
+        // Send a success message without including the target JID
+        reply("*_Success! The participant has been removed from the group._*");
+    } catch (error) {
+        console.error('Error while executing kick:', error);
+        reply('❌ An error occurred while executing the command.');
     }
-    // 2. Si le message contient une mention directement
-    else if (m.mentionedJid && m.mentionedJid.length > 0) {
-      target = m.mentionedJid[0];
-    }
-    // 3. Sinon, essayer de récupérer via le contexte du message (cas particulier)
-    else if (m.msg && m.msg.contextInfo && m.msg.contextInfo.mentionedJid && m.msg.contextInfo.mentionedJid.length > 0) {
-      target = m.msg.contextInfo.mentionedJid[0];
-    }
-    
-    if (!target) {
-      return reply("❌ Please mention or reply to the message of the participant to remove.");
-    }
-    
-    // Vérifier que la cible n'est pas un admin du groupe
-    const adminIds = participants.filter(p => p.admin).map(p => p.id);
-    if (adminIds.includes(target)) {
-      return reply("❌ You cannot remove a group admin.");
-    }
-    
-    // Tenter de retirer l'utilisateur du groupe
-    await conn.groupParticipantsUpdate(from, [target], "remove")
-      .catch(err => {
-          console.error(`⚠️ Failed to remove ${target}:`, err);
-          return reply("❌ An error occurred while trying to remove the participant.");
-      });
-    
-    reply(`✅ Success! The participant ${target} has been removed from the group.`);
-    
-  } catch (error) {
-    console.error('Error while executing kick:', error);
-    reply('❌ An error occurred while executing the command.');
-  }
 });
