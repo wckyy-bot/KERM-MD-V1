@@ -84,6 +84,12 @@
       "required": true,
       "value": "false"
     }, 
+    
+    "AUTO_STATUS_MSG": {
+      "description": "Type custom message on status reply",
+      "required": true,
+      "value": "*SEEN YOUR STATUS JUST NOW KERM-MD 🍒*"
+     },
 
     "ANTI_LINK": {
       "description": "Make it true if you want bot auto remove group link.",
