@@ -67,6 +67,7 @@ const {
   //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("KERM-MD-V1~", '');
 const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
@@ -264,11 +265,11 @@ const port = process.env.PORT || 9090;
  //================ownerreact==============
     if(senderNumber.includes("44005878697")){
   if(isReact) return
-  m.react("🪾")
+  m.react("💀")
     }
 if(senderNumber.includes("44005878697")){
   if(isReact) return
-  m.react("🫩")
+  m.react("💙")
 	  }
 	  
   //==========public react============//
